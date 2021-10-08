@@ -19,7 +19,7 @@ Instruction:
 - Main PR is then reviewed, revised, and merged into `main` branch
 
 ## Report bugs using Github's [issues](https://github.com/ECE444-2021Fall/project1-education-pathways-group-1-teamone/issues)
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](); it's that easy!
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/ECE444-2021Fall/project1-education-pathways-group-1-teamone/issues/new); it's that easy!
 
 ## Write bug reports with detail, background, and sample code
 A well-written bug report can help the developer team understand your problem and reply back to you with possible solutions ASAP.
