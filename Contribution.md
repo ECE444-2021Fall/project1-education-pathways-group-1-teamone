@@ -34,5 +34,5 @@ A well-written bug report can help the developer team understand your problem an
 - Additional Notes (possibly including other solutions you tried that didn't work)
 
 ## References
-This document was built based on the template: [CONTRIBUTING.md](https://github.com/facebook/draft-js/blob/a9316a723f9e918afde44dea68b5f9f39b7d9b00/CONTRIBUTING.md)
+This document was built based on the template: [CONTRIBUTING.md](https://gist.github.com/briandk/3d2e8b3ec8daf5a27a62)
 
