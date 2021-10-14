@@ -13,6 +13,11 @@ bootstrap = Bootstrap(app)
 def index():
     return render_template('index.html')
 
+@app.route('/user/<name>', methods=['GET', 'POST'])
+def user(name):
+    print("user function is called!!!!!!!!!!!")
+    return render_template('user.html', name=None)
+
 
 
 if __name__ == '__main__':
