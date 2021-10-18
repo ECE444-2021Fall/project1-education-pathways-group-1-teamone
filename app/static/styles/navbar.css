@@ -1,0 +1,23 @@
+a.navbar-brand{
+    padding-left:40px;
+}
+
+.mx-auto > li{
+  padding-left:40px;
+  padding-right:40px;
+}
+
+ul.mx-auto li:hover {
+    opacity: 0.5;
+}
+
+i.fa-fw:hover {
+    transform: scale(1.5);
+}
+.mx-right > li{
+  padding-right:30px;
+}
+
+
+
+
