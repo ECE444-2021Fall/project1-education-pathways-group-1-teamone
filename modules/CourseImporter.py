@@ -7,14 +7,18 @@ class CourseImporter:
     COURSES_TABLE = "Courses"
     DISCUSSION_BOARD_TABLE = "CourseDiscussionBoards"
     
-    # Make into dictionary
     COURSE_TABLE_PARAMS = set([
         "CourseID",
         "Name",
         "Division",
         "Description",
         "Department",
-        "Level"
+        "Level",
+        "Campus",
+        "Prerequisites",
+        "Term",
+        "MajorOutcomes",
+        "MinorOutcomes"
     ])
 
     DISCUSSION_BOARD_TABLE_PARAMS = set([
@@ -43,8 +47,14 @@ class CourseImporter:
         
         response1 = self.courses_table.put_item(Item=courseTableItem)
         response2 = self.discussion_table.put_item(Item=discussionTableItem)
-        print(response1)
-        print(response2)
+
+        if response1['ResponseMetadata']['HTTPStatusCode'] != 200: 
+            print("Error creating course for:", params["CourseID"])
+            print(response1) 
+
+        if response2['ResponseMetadata']['HTTPStatusCode'] != 200: 
+            print("Error creating discussion board for:", params["CourseID"])
+            print(response2)
     
 if __name__ == "__main__":
     importer = CourseImporter()
