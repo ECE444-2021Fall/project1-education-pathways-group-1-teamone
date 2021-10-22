@@ -2,8 +2,10 @@
 # to upload the courses to the AWS tables.
 import pandas as pd
 import numpy as np
-from modules.CourseTable import CourseTable
-from modules.DiscussionTable import DiscussionTable
+import sys
+sys.path.append('./modules')
+from CourseTable import CourseTable
+from DiscussionTable import DiscussionTable
 
 
 if __name__ == "__main__":
@@ -37,6 +39,6 @@ if __name__ == "__main__":
         }
 
         print(f"Creating {index}")
-        course_table.add_course(params)
-        discussion_table.add_discussion_board(params["CourseID"])
+        course_table.add_item(params)
+        discussion_table.add_item(params["CourseID"])
         

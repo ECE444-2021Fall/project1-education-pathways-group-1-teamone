@@ -1,21 +1,15 @@
-import boto3
+from Table import Table
 
-boto3.setup_default_session(profile_name='444')
-
-# This class implements the ability to add and modify discussion board in 
+# This class implements the ability to add and modify discussion boards in 
 # the discussion table in AWS
-class DiscussionTable:
+class DiscussionTable(Table):
     DISCUSSION_BOARD_TABLE = "CourseDiscussionBoards"
 
     def __init__(self):
-        # AWS Configuartion 
-        self.endpoint_url = "https://dynamodb.us-east-1.amazonaws.com"
-        self.dynamodb = boto3.resource('dynamodb', endpoint_url=self.endpoint_url)
-        self.discussion_table = self.dynamodb.Table(DiscussionTable.DISCUSSION_BOARD_TABLE)
+        super().__init__(self.DISCUSSION_BOARD_TABLE)
 
-    # Given the course information in params, add the course to the course_table and 
-    # add an associated discussion board to the discussion_table
-    def add_discussion_board(self, courseID):
+    # Add an empty discussion board to the table with the provided courseID
+    def add_item(self, courseID):
         discussionTableItem = {
             "CourseID": courseID,
             "Ratings": {
@@ -26,16 +20,23 @@ class DiscussionTable:
             "DiscussionBoard": []
         }        
 
-        response = self.discussion_table.put_item(Item=discussionTableItem)
+        response = self.table.put_item(Item=discussionTableItem)
 
         if response['ResponseMetadata']['HTTPStatusCode'] != 200: 
             print("Error creating discussion board for:", courseID)
             print(response)
-
-    def update_course_rating(self):
+    def get_item(self):
         #TODO
         pass
-    
+
+    def update_item(self):
+        #TODO
+        pass
+
+    def delete_item(self):
+        #TODO
+        pass
+
     def add_post(self):
         #TODO
         pass
