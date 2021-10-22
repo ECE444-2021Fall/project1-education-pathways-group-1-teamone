@@ -2,5 +2,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Welcome to the group1-education-pathway, this is <b>home</b> page!</h1>
+  <h1>Course Search</h1>
+  {% with arr=arr %}{% include 'form.html' %}{% endwith%}
 {% endblock %}

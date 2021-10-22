@@ -1,10 +1,18 @@
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/results.css') }}">
 
-{% with arr=arr %}{% include 'index.html' %}{% endwith%}
-<div id="results-page-table-container">
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Course Search</h1>
+  {% with arr=arr %}{% include 'form.html' %}{% endwith%}
+  <div id="results-page-table-container">
     {% for table in tables %}
-        {{ table|safe }}
+      {{ table|safe }}
     {% endfor %}
-</div>
+  </div>
+{% endblock %}
+
 
 

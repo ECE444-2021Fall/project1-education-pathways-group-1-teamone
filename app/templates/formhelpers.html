@@ -1,6 +1,6 @@
 {% macro render_select(label, options, width) %}
     <br><b>{{ label }}</b><br>
-    <select class="form-select" style="width:{{width}}">
+    <select class="form-select"">
         {% if label == "Course Year" %}
             <option selected>0</option>
         {% else %}

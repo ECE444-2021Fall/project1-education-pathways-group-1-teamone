@@ -1,5 +1,5 @@
 {% from "formhelpers.html" import render_select %}
-<form method="post">
+<!-- <form method="post">
   <p>
     {{ render_select("Course Year", arr, "5%") }}
     {{ render_select("Division", arr, "25%") }} or 
@@ -7,11 +7,37 @@
     {{ render_select("Campus", arr, "25%") }}
   </p> 
 
-
   <div class="form-group" style="width:30%;">
     <label for="exampleInputEmail1">Search Term</label>
     <input name="text-field" class="form-control" placeholder="Enter text">
   </div> 
 
   <button type="submit" class="btn btn-primary">Submit</button>
+</form> -->
+
+<form class="row g-3" method="post">
+
+
+  <div class="col-5">
+    {{ render_select("Faculty", arr, "5%") }}
+  </div>
+  <div class="col-4">
+     {{ render_select("Department", arr, "5%") }}
+  </div>
+  <div class="col-3">
+     {{ render_select("Campus", arr, "5%") }}
+  </div>
+
+  <div class="col-6">
+    {{ render_select("Keyword", arr, "5%") }}
+  </div>
+  <div class="col-3">
+     {{ render_select("Course Code", arr, "5%") }}
+  </div>
+  <div class="col-3">
+     {{ render_select("Course Year", arr, "5%") }}
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
 </form>
