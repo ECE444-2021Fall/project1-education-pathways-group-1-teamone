@@ -1,3 +1,5 @@
+# This file reads the course info pickle, processes the data, and call the course importer
+# to upload the courses to the AWS tables.
 import pandas as pd
 import numpy as np
 from modules.CourseImporter import CourseImporter
@@ -5,17 +7,19 @@ from modules.CourseImporter import CourseImporter
 
 if __name__ == "__main__":
     importer = CourseImporter()
+    # Read the pickle containing the course data 
     df = pd.read_pickle('resources/df_processed.pickle').set_index('Code')
+    # Replace any NaN's with empty strings
     df = df.replace(np.nan, "")
-    
+    # Only upload 20 courses for now 
     num_courses = 20
     i = 0
+    # Read each course, save the nessecary fields, and call the CourseImporter
     for index, course in df.iterrows():
         i += 1
-
         if i > num_courses:
             break
-            
+        
         params = {
             "CourseID": index,
             "Name": course['Name'],
