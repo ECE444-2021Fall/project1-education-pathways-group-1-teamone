@@ -2,11 +2,13 @@
 # to upload the courses to the AWS tables.
 import pandas as pd
 import numpy as np
-from modules.CourseImporter import CourseImporter
+from modules.CourseTable import CourseTable
+from modules.DiscussionTable import DiscussionTable
 
 
 if __name__ == "__main__":
-    importer = CourseImporter()
+    course_table = CourseTable()
+    discussion_table = DiscussionTable()
     # Read the pickle containing the course data 
     df = pd.read_pickle('resources/df_processed.pickle').set_index('Code')
     # Replace any NaN's with empty strings
@@ -35,5 +37,6 @@ if __name__ == "__main__":
         }
 
         print(f"Creating {index}")
-        importer.create_course(params)
+        course_table.add_course(params)
+        discussion_table.add_discussion_board(params["CourseID"])
         
