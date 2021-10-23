@@ -6,6 +6,7 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email
 from flask import Flask, render_template, session, redirect, url_for, flash
 import pandas as pd
+import json
 
 
 
@@ -40,6 +41,14 @@ def results():
     tables = df.iloc[:2, :8].to_html()
     print("hello2")
     return render_template('results.html', arr=arr, tables=[tables])
+
+@app.route('/course/<code>')
+def course(code):
+    course = json.loads(df.log[code].json())
+
+    return render_template('course.html', course=course)
+
+
 
 @app.route('/user/<name>', methods=['GET', 'POST'])
 def user(name):

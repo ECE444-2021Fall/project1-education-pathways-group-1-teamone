@@ -1,3 +1,4 @@
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/form.css') }}">
 {% from "formhelpers.html" import render_select %}
 <!-- <form method="post">
   <p>
@@ -16,28 +17,36 @@
 </form> -->
 
 <form class="row g-3" method="post">
+  <div class="form-content row g-3">
+    <div class="col-5">
+        {{ render_select("Faculty", arr, "5%") }}
+    </div>
+    <div class="col-4">
+        {{ render_select("Department", arr, "5%") }}
+    </div>
+    <div class="col-3">
+        {{ render_select("Campus", arr, "5%") }}
+    </div>
+
+    <div class="col-6">
+        <b>Keyword</b>
+        <input type="text" class="form-control" placeholder="Enter course title or keyword" aria-label="State">
+    </div>
+    <div class="col-3">
+        <b>Course Code</b>
+        <input type="text" class="form-control" placeholder="Enter course code" aria-label="State">
+    </div>
+    <div class="col-3">
+        {{ render_select("Course Year", arr, "5%") }}
+    </div>
+  </div>
 
 
-  <div class="col-5">
-    {{ render_select("Faculty", arr, "5%") }}
+  <span class="col-8"></span>
+  <div class="col-2">
+    <button type="submit" class="btn btn-secondary custom">Clear Filters</button>
   </div>
-  <div class="col-4">
-     {{ render_select("Department", arr, "5%") }}
-  </div>
-  <div class="col-3">
-     {{ render_select("Campus", arr, "5%") }}
-  </div>
-
-  <div class="col-6">
-    {{ render_select("Keyword", arr, "5%") }}
-  </div>
-  <div class="col-3">
-     {{ render_select("Course Code", arr, "5%") }}
-  </div>
-  <div class="col-3">
-     {{ render_select("Course Year", arr, "5%") }}
-  </div>
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary">Submit</button>
+  <div class="col-2">
+    <button type="submit" class="btn btn-primary custom">Submit</button>
   </div>
 </form>
