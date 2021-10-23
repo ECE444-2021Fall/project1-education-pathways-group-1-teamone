@@ -1,0 +1,22 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+
+{% block content %}
+
+    <table id="courseInfo">
+    </table>
+
+    <script>
+        function buildTale(course){
+            var table = document.getElementById("courseInfo");
+            for(var key in course){
+                var row = `<tr> 
+                            <td>${key}</td>
+                            <td>${course[key]}</td>
+                        </tr>`;
+                table.innerHtml += row;
+            }
+        }
+        buildTable({{course|safe}})
+    </script>
+{% endblock %}
