@@ -73,3 +73,20 @@ def test_upload_courses_main(mocker, course_table_mock, discussion_table_mock):
 
     assert courses_add_item_spy.call_count == 10
     assert discussion_add_item_spy.call_count == 10
+
+
+# Written by Gurmehar Sandhu
+def test_does_not_upload_if_data_partial(mocker, course_table_mock, discussion_table_mock):
+    courses_add_item_spy = mocker.spy(course_table_mock, 'add_item')
+    discussion_add_item_spy = mocker.spy(discussion_table_mock, 'add_item')
+    df = MockedDataFrame(rows=10)
+    del df.rows[0][1]['Name'] # Delete name key
+    mocker.patch('util.upload_courses.get_pickle_df', return_value=df)
+    mocker.patch('util.upload_courses.get_courses_table', return_value=course_table_mock)
+    mocker.patch('util.upload_courses.get_discussion_table', return_value=discussion_table_mock)
+
+    with pytest.raises(KeyError):
+        upload_courses.main()
+    
+    assert courses_add_item_spy.call_count == 0
+    assert discussion_add_item_spy.call_count == 0
