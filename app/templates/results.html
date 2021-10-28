@@ -1,13 +1,16 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/results.css') }}">
 
 
 
 
 {% block content %}
-  {% with arr=arr %}{% include 'search.html' %}{% endwith%}
+   <h1 style="margin: 20px">Course Search</h1>
+  {% with arr=arr %}{% include 'form.html' %}{% endwith%}
   
   <div id="results-page-table-container">
-      <h1 style="padding-bottom: 25px;">Search Results</h1>
+      <h1 style="margin-bottom: 25px;">Search Results</h1>
     {% for table in tables %}
       {{ table|safe }}
     {% endfor %}

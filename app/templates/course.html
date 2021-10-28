@@ -2,21 +2,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-    <table id="courseInfo">
-    </table>
+    <style>
+        table{
+            margin-top: 20px;
+        }
+        table, th, td {
+        border: 1px solid black;
+        }
+    </style>
+    <h1 style="padding: 20px">Course Information</h1>
+    {% if course %}
+        <table class="table">
+            <tbody id="table-body"></tbody>
+        </table>
+    {% else %}
+        <p>Course not exist!</p>
+    {% endif %}
 
     <script>
-        function buildTale(course){
-            var table = document.getElementById("courseInfo");
+        function buildTable(course){
+
+            var table = document.getElementById("table-body");
+            i = 0;
             for(var key in course){
-                var row = `<tr> 
-                            <td>${key}</td>
-                            <td>${course[key]}</td>
-                        </tr>`;
-                table.innerHtml += row;
+                content = course[key]
+                if(content != null && content.length > 0){
+                    var row = `<tr> 
+                    <td>${key}</td>
+                    <td>${course[key]}</td></tr>`
+                    console.log(content);
+                    table.innerHTML += row;
+                    i += 1;
+                }
+                if(i >= 10){
+                    return;
+                }
             }
         }
-        buildTable({{course|safe}})
+
+        buildTable({{course|tojson}})
     </script>
 {% endblock %}
