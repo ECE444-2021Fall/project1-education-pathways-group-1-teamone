@@ -1,45 +1,48 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/course.css') }}">
 {% block content %}
-    <style>
-        table{
-            margin-top: 20px;
-        }
-        table, th, td {
-        border: 1px solid black;
-        }
-    </style>
-    <h1 style="padding: 20px">Course Information</h1>
-    {% if course %}
-        <table class="table">
-            <tbody id="table-body"></tbody>
-        </table>
-    {% else %}
-        <p>Course not exist!</p>
-    {% endif %}
+    <section class="course_info">
+        <h1>Course Information</h1>
+        {% if course %}
+            <table class="table">
+                <tbody id="table-body"></tbody>
+            </table>
+        {% else %}
+            <p>Course not exist!</p>
+        {% endif %}]
+        <script>
+            function buildTable(course){
 
-    <script>
-        function buildTable(course){
-
-            var table = document.getElementById("table-body");
-            i = 0;
-            for(var key in course){
-                content = course[key]
-                if(content != null && content.length > 0){
-                    var row = `<tr> 
-                    <td>${key}</td>
-                    <td>${course[key]}</td></tr>`
-                    console.log(content);
-                    table.innerHTML += row;
-                    i += 1;
-                }
-                if(i >= 10){
-                    return;
+                var table = document.getElementById("table-body");
+                i = 0;
+                for(var key in course){
+                    content = course[key]
+                    if(content != null && content.length > 0){
+                        var row = `<tr> 
+                        <td>${key}</td>
+                        <td>${course[key]}</td></tr>`
+                        console.log(content);
+                        table.innerHTML += row;
+                        i += 1;
+                    }
+                    if(i >= 5){
+                        return;
+                    }
                 }
             }
-        }
 
-        buildTable({{course|tojson}})
-    </script>
+            buildTable({{course|tojson}})
+        </script>
+    </section>
+
+    <section class="discussion">
+        <h1>Discussion</h1>
+        <form class="row g-3" action="/course/{{code}}/add_comment" method="post">
+            <textarea class="form-control" rows="4" placeholder="What's up?" required></textarea>
+            <span class="col-8"></span>
+            <button type="submit" class="btn btn-primary col-4">Add Comment</button>
+        </form>
+    </section>
+
 {% endblock %}

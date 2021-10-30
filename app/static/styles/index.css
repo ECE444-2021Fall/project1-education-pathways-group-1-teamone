@@ -1,7 +1,7 @@
 
 @media (min-width: 1200px) {
     .container{
-        max-width: 2000px;
+        max-width: 1600px;
     }
 }
  
@@ -48,15 +48,6 @@ td p{
     font-size: large;
 }
 
-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 60px;
-  line-height: 60px; /* Vertically center the text there */
-  background-color: #f5f5f5;
-}
 
 .btn{
     width: 20%;
