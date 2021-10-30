@@ -6,15 +6,17 @@
 
 
 {% block content %}
-   <h1 style="margin: 20px">Course Search</h1>
-  {% with arr=arr %}{% include 'form.html' %}{% endwith%}
-  
-  <div id="results-page-table-container">
-      <h1 style="margin-bottom: 25px;">Search Results</h1>
-    {% for table in tables %}
-      {{ table|safe }}
-    {% endfor %}
-  </div>
+   <section class="course_search">
+       <h1 style="margin: 20px">Course Search</h1>
+        {% with arr=arr %}{% include 'form.html' %}{% endwith%}
+   </section>
+
+  <section class="search_result">
+        <h1 style="margin-bottom: 25px;">Search Results</h1>
+        {% for table in tables %}
+        {{ table|safe }}
+        {% endfor %}
+  </section>
 {% endblock %}
 
 

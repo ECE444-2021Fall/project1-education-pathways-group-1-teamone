@@ -1,6 +1,13 @@
-a.navbar-brand{
-    padding-left:40px;
+
+
+a.navbar-brand.text-primary:hover{
+   color:lightblue !important;
 }
+a.navbar-brand.text-primary{
+    padding-left: 50px;
+}
+
+
 
 .mx-auto > li{
   padding-left:40px;

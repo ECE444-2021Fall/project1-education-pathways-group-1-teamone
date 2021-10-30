@@ -47,7 +47,12 @@ def course(code):
     if code in df.index:
         course = json.loads(df.loc[code].to_json())
 
-    return render_template('course.html', course=course)
+    return render_template('course.html', course=course, code=code)
+
+@app.route('/course/<code>/add_comment', methods=['POST'])
+def add_comment(code):
+    print(f"Add comment of {code} is called!")
+    return redirect(url_for("course", code=code))
 
 
 

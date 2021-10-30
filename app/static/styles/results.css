@@ -1,5 +1,5 @@
 
-#results-page-table-container{
+.search_result{
     margin: auto;
     width: 1400px;
 }
@@ -30,3 +30,4 @@
 #results-page-table-container table td:last-child{
     border-right: 1px solid #00204E;
 }
+
