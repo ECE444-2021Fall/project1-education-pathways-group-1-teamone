@@ -17,7 +17,7 @@ import json
 #     select = SelectField("Please select", choices=[1,2,3])
 #     submit = SubmitField('Submit')
 
-df = pd.read_pickle('./app/resources/df_processed.pickle').set_index("Code")
+df = pd.read_pickle('project/resources/df_processed.pickle').set_index("Code")
 
 
 
@@ -31,11 +31,12 @@ def index():
 def search():
     arr = [1,2,3]
     if request.method == 'POST':
-        return results()
+        return results(request.form)
     return render_template('search.html', arr=arr)
 
-@app.route('/results')
-def results():
+
+def results(form):
+    print(form.to_dict())
     arr = [1,2,3]
     table = df.loc[:, ["Course", "Division"]][:2]
     table = table.to_html(classes='data',index=False,na_rep='',render_links=True, escape=False)
