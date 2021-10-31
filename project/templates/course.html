@@ -1,39 +1,37 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/course.css') }}">
+
 {% block content %}
+
+   
     <section class="course_info">
         <h1>Course Information</h1>
         {% if course %}
             <table class="table">
-                <tbody id="table-body"></tbody>
+                <tbody id="courseInfo">
+                    {% for key in course %}
+                        {% if loop.index >= 10%}
+                            {% break %}
+                        {% endif %}
+                        {% set content = course[key] %}
+                        {% if content is iterable and (content is not string and content is not mapping) %}
+                            {% set content = content|join(', ') %}
+                        {% endif %}
+                        {% if content%}
+                            <tr><td class="col-2"><h5>{{key}}</h5></td>
+                            {% if key == "Course Description"  %}
+                                <td class="col-8 description"> <p class="many-text">{{content}}</p> 
+                                        <span type="button" class="toggle-text" onclick="toggleText(this)">Read More</span></td></tr>
+                            {% else %}
+                                <td class="col-8 description">{{content|safe}}</td></tr>       
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
             </table>
         {% else %}
             <p>Course not exist!</p>
         {% endif %}
-        <script>
-            function buildTable(course){
-
-                var table = document.getElementById("table-body");
-                i = 0;
-                for(var key in course){
-                    content = course[key]
-                    if(content != null && content.length > 0){
-                        var row = `<tr> 
-                        <td>${key}</td>
-                        <td>${course[key]}</td></tr>`
-                        console.log(content);
-                        table.innerHTML += row;
-                        i += 1;
-                    }
-                    if(i >= 6){
-                        return;
-                    }
-                }
-            }
-
-            buildTable({{course|tojson}})
-        </script>
     </section>
 
     <section class="discussion">
@@ -43,6 +41,32 @@
             <span class="col-8"></span>
             <button type="submit" class="btn btn-primary col-4">Add Comment</button>
         </form>
+
+        <h3>{{comments|length}} comments</h3>
+        <table class="table">    
+            {% for comment in comments %}
+                <tr>
+                    <td class="col-1">
+                        <figure class="figure">
+                            <img class="user" src="{{url_for('static', filename='images/discussionboard_user.png')}}"  alt="User">
+                            <figcaption class="figure-caption">{{comment['user']}}</figcaption>
+                        </figure>
+                    </td>
+                    <td class="col-7 align-middle">
+                        <p class="message">
+                        {{comment['message']}}
+                        </p>
+                    </td>
+                    <td class="col-1">
+                        <i class="fa fa-lg fa-heart" onclick="toggleHeartColor(this)"></i>
+                        <span class="like">{{comment['like']}}</span>
+                    </td>
+                    <td class="col-1"><i>{{comment['time']}}</i></td>
+                </tr>
+            {% endfor %}
+        </table>
     </section>
+    <script src="{{url_for('static', filename='scripts/course.js')}}"></script>
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/course.css') }}">
 
 {% endblock %}

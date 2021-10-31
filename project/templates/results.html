@@ -1,11 +1,9 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/results.css') }}">
-
-
 
 
 {% block content %}
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/results.css') }}">
    <section class="course_search">
        <h1 style="margin: 20px">Course Search</h1>
         {% with arr=arr %}{% include 'form.html' %}{% endwith%}
@@ -13,9 +11,11 @@
 
   <section class="search_result">
         <h1 style="margin-bottom: 25px;">Search Results</h1>
-        {% for table in tables %}
-        {{ table|safe }}
-        {% endfor %}
+        <div id="results-page-table-container">
+            {% for table in tables %}
+                {{ table|safe }}
+            {% endfor %}
+        </div>
   </section>
 {% endblock %}
 

@@ -18,7 +18,7 @@ ul.mx-auto li:hover {
     opacity: 0.5;
 }
 
-i.fa-fw:hover {
+nav i.fa-fw:hover {
     transform: scale(1.5);
 }
 .mx-right > li{

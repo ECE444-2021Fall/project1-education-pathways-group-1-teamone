@@ -7,6 +7,7 @@ from wtforms.validators import DataRequired, Email
 from flask import Flask, render_template, session, redirect, url_for, flash
 import pandas as pd
 import json
+import datetime
 
 
 
@@ -19,10 +20,18 @@ import json
 
 df = pd.read_pickle('project/resources/df_processed.pickle').set_index("Code")
 
-
+def debug(text):
+    print(text)
 
 app = Flask(__name__)
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+app.jinja_env.filters['debug'] = debug
 bootstrap = Bootstrap(app)
+
+
+
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -38,17 +47,34 @@ def search():
 def results(form):
     print(form.to_dict())
     arr = [1,2,3]
-    table = df.loc[:, ["Course", "Division"]][:2]
+    table = df.loc[:, ["Course","Name", "Division"]][:4]
     table = table.to_html(classes='data',index=False,na_rep='',render_links=True, escape=False)
     return render_template('results.html', arr=arr, tables=[table])
 
 @app.route('/course/<code>')
 def course(code):
     course = None 
+    comments = None
     if code in df.index:
         course = json.loads(df.loc[code].to_json())
+        # course["Activity"] = course["Activity"][0]
+        # print(course["Activity"])
+        comments =[
+            {
+                "user":"Tony",
+                "message":"Hello, this is Tony!",
+                "like": 1,
+                "time":datetime.datetime(2020, 5, 5).strftime("%m/%d/%Y")
+            },
+            {
+                "user":"Tony2",
+                "message":"Hello, this is Tony2!",
+                "like": 3,
+                "time":datetime.datetime(2021, 4, 9).strftime("%m/%d/%Y")
+            }
+        ]
 
-    return render_template('course.html', course=course, code=code)
+    return render_template('course.html', course=course, comments=comments, code=code)
 
 @app.route('/course/<code>/add_comment', methods=['POST'])
 def add_comment(code):
