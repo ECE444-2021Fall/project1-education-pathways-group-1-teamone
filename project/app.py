@@ -57,8 +57,6 @@ def course(code):
     comments = None
     if code in df.index:
         course = json.loads(df.loc[code].to_json())
-        # course["Activity"] = course["Activity"][0]
-        # print(course["Activity"])
         comments =[
             {
                 "user":"Tony",
@@ -86,19 +84,6 @@ def add_comment(code):
 @app.route('/user/<name>', methods=['GET', 'POST'])
 def user(name):
     return render_template('user.html', name=None)
-
-
-
-# {
-#     {
-#         coursecode: ,
-#         name: ,
-#     },
-#     {
-#         coursecode: ,
-#         name: ,
-#     }
-# }
 
 
 if __name__ == '__main__':
