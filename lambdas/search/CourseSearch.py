@@ -12,22 +12,60 @@ host = 'https://search-courses-nb4cbsmwocu5uvwtwhxdcvkeha.us-east-1.es.amazonaws
 index = 'lambda-index'
 url = host + '/' + index + '/_search'
 
-# Lambda execution starts here
-TEST_QUERY = "computer engineering"
+STRING_FIELDS = ["CourseID", "Description", "Division", "Campus", "Department", "Name"]
+NUM_FIELDS = ["Level"]
+LIST_FIELDS = ["MinorOutcomes", "MajorOutcomes", "Term", "Prerequisites"]
+
+def convertFieldValueToList(fieldName, value):
+    valuesList = []
+    if fieldName in STRING_FIELDS:
+        valuesList.append(value["S"])
+    elif fieldName in NUM_FIELDS:
+        valuesList.append(value["N"])
+    elif fieldName in LIST_FIELDS:
+        for val in value["L"]:
+            valuesList.append(val["S"])
+    return valuesList
+
+def format_results(results):
+    formattedResults = {}
+    for result in results:
+        courseResult = {
+            "data": {},
+            "score": result["_score"]
+        }
+        for fieldName, values in result["_source"].items():
+            courseResult["data"][fieldName] = convertFieldValueToList(fieldName, values)
+        
+        courseID = result["_source"]["CourseID"]["S"]
+        formattedResults[courseID] = courseResult
+
+    return formattedResults
+
+def filter_results(results, filters):
+    coursesToRemove = set()
+    for courseID, course in results.items():
+        for fieldName, values in course["data"].items():
+            for val in values:
+                if fieldName in filters and val not in filters[fieldName]:
+                    coursesToRemove.add(courseID)
+    print("REMOVING", len(coursesToRemove))
+    for courseID in coursesToRemove:
+        del results[courseID]      
+
 def lambda_handler(event, context):
 
-    # Put the user query into the query DSL for more accurate search results.
-    # Note that certain fields are boosted (^).
     query = {
-        "size": 50,
+        "from": event["from"] if "from" in event else 0,
+        "size": event["numResults"] if "numResults" in event else 20,
         "query": {
-            "multi_match": {
-                "query": TEST_QUERY if not event else event['queryStringParameters']['q']
+                    "multi_match": {
+                        "query": event['queryString'],
+                        "fields": ["CourseID.S^4", "Name.S^3", "Description.S^2", "Division.S", "Department.S"]
+                    },
+                },
             }
-        }
-    }
 
-    # Elasticsearch 6.x requires an explicit Content-Type header
     headers = { "Content-Type": "application/json" }
 
     # Make the signed HTTP request
@@ -42,11 +80,24 @@ def lambda_handler(event, context):
         "isBase64Encoded": False
     }
 
+    unformattedResults = json.loads(r.text)['hits']['hits']
+    formattedResults = format_results(unformattedResults)
+    filter_results(formattedResults, event['filters'] if "filters" in event else {})
+    print(len(formattedResults.keys()), formattedResults.keys())
+
     # Add the search results to the response
-    response['body'] = r.text
+    response['body'] = json.dumps(formattedResults)
     return response
 
 if __name__ == "__main__":
-    print(json.dumps(json.loads(lambda_handler({}, {})['body']), indent=4))
-    print(len(json.loads(lambda_handler({}, {})['body'])['hits']['hits']))
-    # print(type(lambda_handler({}, {})['body']))
+    event = {
+        "from": 0,
+        "numResults": 5,
+        "queryString": "science", 
+        "filters": {
+            "Division": ["University of Toronto Scarborough"],
+            "Level": ["1", "4"]
+        }
+    }
+    
+    json.dumps(json.loads(lambda_handler(event, {})['body']), indent=4)
