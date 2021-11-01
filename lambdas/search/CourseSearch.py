@@ -16,6 +16,11 @@ STRING_FIELDS = ["CourseID", "Description", "Division", "Campus", "Department", 
 NUM_FIELDS = ["Level"]
 LIST_FIELDS = ["MinorOutcomes", "MajorOutcomes", "Term", "Prerequisites"]
 
+# Converts the DynamoDB formatted values of a field to a list of strings.
+# So that it is easier to work with. 
+# For example, if the fieldName is "Prerequisites" with a value of:
+#   {'L': [{'S': 'PPGB66H3'}, {'S': 'POLB50Y3'}, {'S': 'POLB92H3'}]}
+# This function would return ['PPGB66H3', 'POLB50Y3', 'POLB92H3']
 def convertFieldValueToList(fieldName, value):
     valuesList = []
     if fieldName in STRING_FIELDS:
@@ -27,6 +32,18 @@ def convertFieldValueToList(fieldName, value):
             valuesList.append(val["S"])
     return valuesList
 
+# Reformat the results into the following format:
+# { "<CourseID>" : {
+#     "score": "<score>"
+#     "data": {
+#         "name": ["<name>"],
+#         "prerequsites": ["<prereq1>, <prereq2>"],
+#         ...
+#     },
+#
+#  "<CourseID>": {...},
+#   ...
+# }}
 def format_results(results):
     formattedResults = {}
     for result in results:
@@ -42,6 +59,9 @@ def format_results(results):
 
     return formattedResults
 
+# Remove results that don't match the filter.
+# This function doesn't return anthing, the results parameter
+# is modified directly.
 def filter_results(results, filters):
     coursesToRemove = set()
     for courseID, course in results.items():
@@ -49,18 +69,19 @@ def filter_results(results, filters):
             for val in values:
                 if fieldName in filters and val not in filters[fieldName]:
                     coursesToRemove.add(courseID)
-    print("REMOVING", len(coursesToRemove))
     for courseID in coursesToRemove:
         del results[courseID]      
 
-def lambda_handler(event, context):
-
+# Handler function called by Lambda
+def handler(event, context):
+    # Construct the query object based on the search parameters
+    params = json.loads(event["body"])
     query = {
-        "from": event["from"] if "from" in event else 0,
-        "size": event["numResults"] if "numResults" in event else 20,
+        "from": params["from"] if "from" in params else 0,
+        "size": params["numResults"] if "numResults" in params else 20,
         "query": {
                     "multi_match": {
-                        "query": event['queryString'],
+                        "query": params['queryString'],
                         "fields": ["CourseID.S^4", "Name.S^3", "Description.S^2", "Division.S", "Department.S"]
                     },
                 },
@@ -70,6 +91,8 @@ def lambda_handler(event, context):
 
     # Make the signed HTTP request
     r = requests.get(url, auth=awsauth, headers=headers, data=json.dumps(query))
+    if r.status_code != 200:
+        return r.text
 
     # Create the response and add some extra content to support CORS
     response = {
@@ -80,24 +103,23 @@ def lambda_handler(event, context):
         "isBase64Encoded": False
     }
 
+    # Format and filter the results
     unformattedResults = json.loads(r.text)['hits']['hits']
     formattedResults = format_results(unformattedResults)
-    filter_results(formattedResults, event['filters'] if "filters" in event else {})
-    print(len(formattedResults.keys()), formattedResults.keys())
+    filter_results(formattedResults, params['filters'] if "filters" in params else {})
 
     # Add the search results to the response
     response['body'] = json.dumps(formattedResults)
     return response
 
 if __name__ == "__main__":
-    event = {
+    params = {
         "from": 0,
-        "numResults": 5,
+        "numResults": 10,
         "queryString": "science", 
         "filters": {
             "Division": ["University of Toronto Scarborough"],
             "Level": ["1", "4"]
         }
     }
-    
-    json.dumps(json.loads(lambda_handler(event, {})['body']), indent=4)
+    print(json.dumps(json.loads(handler({"body": json.dumps(params)}, {})['body']), indent=4))
