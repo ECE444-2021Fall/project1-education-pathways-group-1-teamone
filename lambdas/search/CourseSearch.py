@@ -66,9 +66,12 @@ def filter_results(results, filters):
     coursesToRemove = set()
     for courseID, course in results.items():
         for fieldName, values in course["data"].items():
+            matchFound = False
             for val in values:
-                if fieldName in filters and val not in filters[fieldName]:
-                    coursesToRemove.add(courseID)
+                if fieldName in filters and val in filters[fieldName]:
+                    matchFound = True
+            if fieldName in filters and not matchFound:
+                coursesToRemove.add(courseID)
     for courseID in coursesToRemove:
         del results[courseID]      
 
