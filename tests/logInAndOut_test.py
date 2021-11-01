@@ -9,13 +9,13 @@ def user_login(valid):
     if (valid):
     	return app.test_client().post(
         	"/login",
-        	data=valid_usera,
+        	data=valid_user,
         	follow_redirects=True
     	)
     else:
         return app.test_client().post(
                 "/login",
-                data=invalid_usera,
+                data=invalid_user,
                 follow_redirects=True
         )
 
@@ -28,7 +28,8 @@ def test_logInIndex():
 #Joshua Pius
 def test_user_login():
     """Test valid user information is recognized"""
-    res_post = user_login(true)
+    res_post = user_login(True)
     assert res_get.status_code  == 200
-    res_post = user_login(false)
+    """Test invalid user information is recognized"""
+    res_post = user_login(False)
     assert res_post.status_code  != 200
