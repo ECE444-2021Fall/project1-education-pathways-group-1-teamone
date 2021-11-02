@@ -82,13 +82,17 @@ def handler(event, context):
     query = {
         "from": params["from"] if "from" in params else 0,
         "size": params["numResults"] if "numResults" in params else 20,
-        "query": {
+            }
+
+    if params["queryString"]:
+        query["query"] = {
                     "multi_match": {
                         "query": params['queryString'],
                         "fields": ["CourseID.S^4", "Name.S^3", "Description.S^2", "Division.S", "Department.S"]
                     },
-                },
-            }
+                }
+    else:
+        query["query"] = {"match_all": {}}
 
     headers = { "Content-Type": "application/json" }
 
