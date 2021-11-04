@@ -6,20 +6,19 @@
 
 #results-page-table-container table{
     border-radius: 20px;
-    padding: 20px;
     border-collapse: separate;
 }
 
 #results-page-table-container table td{
-    padding: 3px;
+    padding: 8px;
     border-left: 1px solid #00204E;
     border-bottom: 1px solid #00204E;
 }
 
 #results-page-table-container table th{
+    padding: 8px;
     text-align: center;
     top: 2px;
-    z-index: 10;
     background-color: #00204E;
     color: white;
     border-left: 1px solid #00204E;
@@ -31,3 +30,12 @@
     border-right: 1px solid #00204E;
 }
 
+.description{
+
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    vertical-align: center;
+}
