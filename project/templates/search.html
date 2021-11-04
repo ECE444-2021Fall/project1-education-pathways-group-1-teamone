@@ -2,6 +2,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+
   <h1 style="margin: 20px">Course Search</h1>
-  {% with arr=arr %}{% include 'form.html' %}{% endwith%}
+  {% with selections=selections %}{% include 'form.html' %}{% endwith%}
+  
+
 {% endblock %}

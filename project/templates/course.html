@@ -10,21 +10,20 @@
             <table class="table">
                 <tbody id="courseInfo">
                     {% for key in course %}
-                        {% if loop.index >= 10%}
-                            {% break %}
-                        {% endif %}
+                         <tr><td class="col-2"><h5>{{key}}</h5></td>
                         {% set content = course[key] %}
+                        {% if not content %}
+                            <td class="col-2">N/A</td>
+                            {% continue %}
+                        {% endif %}
                         {% if content is iterable and (content is not string and content is not mapping) %}
                             {% set content = content|join(', ') %}
-                        {% endif %}
-                        {% if content%}
-                            <tr><td class="col-2"><h5>{{key}}</h5></td>
-                            {% if key == "Course Description"  %}
-                                <td class="col-8 description"> <p class="many-text">{{content}}</p> 
-                                        <span type="button" class="toggle-text" onclick="toggleText(this)">Read More</span></td></tr>
-                            {% else %}
-                                <td class="col-8 description">{{content|safe}}</td></tr>       
-                            {% endif %}
+                        {% endif %}                     
+                        {% if "Description" in key %}
+                            <td class="col-8 description"> <p class="many-text">{{content}}</p> 
+                                    <span type="button" class="toggle-text" onclick="toggleText(this)">Read More</span></td></tr>
+                        {% else %}
+                            <td class="col-8">{{content|safe}}</td></tr>       
                         {% endif %}
                     {% endfor %}
                 </tbody>
