@@ -1,0 +1,11 @@
+{% macro render_select(label, options) %}
+    <b>{{ label }}</b>
+    
+    <select name="{{label}}" class="selectpicker" multiple>
+
+        {% for option in options  %}
+            <option>{{option}}</option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+

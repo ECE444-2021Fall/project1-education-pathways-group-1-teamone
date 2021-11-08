@@ -1,0 +1,54 @@
+
+@media (min-width: 1200px) {
+    .container{
+        max-width: 1600px;
+    }
+}
+ 
+
+table {
+  border-collapse: collapse;
+  width: 97%;
+  margin-top: 50px;
+}
+h1{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+td {
+  text-align: center;
+  /* border: 1px solid black; */
+}
+
+p.description{
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    color: gray;
+    font-size: large;
+    text-align: center;
+    font-style: italic;
+}
+
+h3{
+    margin-top:50px;
+
+}
+
+td p{
+    width: 70%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+    color: gray;
+    font-size: large;
+}
+
+
+.btn{
+    width: 20%;
+}
