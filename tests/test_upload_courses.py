@@ -1,4 +1,6 @@
 import pytest
+import sys
+sys.path.append('../modules')
 from util import upload_courses
 
 class MockedDataFrame:
