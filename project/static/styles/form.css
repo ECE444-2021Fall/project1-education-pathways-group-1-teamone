@@ -1,0 +1,17 @@
+@media (min-width: 1200px) {
+    .container{
+        max-width: 1400px;
+    }
+}
+
+.form-content{
+    border-radius: 20px;
+    padding: 30px;
+    border-collapse: separate;
+    border: 1px solid #00204E;
+}
+
+.custom{
+    width: 180px;
+    padding: 10px;
+}

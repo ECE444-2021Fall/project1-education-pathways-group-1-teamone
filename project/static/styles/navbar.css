@@ -1,0 +1,30 @@
+
+
+a.navbar-brand.text-primary:hover{
+   color:lightblue !important;
+}
+a.navbar-brand.text-primary{
+    padding-left: 50px;
+}
+
+
+
+.mx-auto > li{
+  padding-left:40px;
+  padding-right:40px;
+}
+
+ul.mx-auto li:hover {
+    opacity: 0.5;
+}
+
+nav i.fa-fw:hover {
+    transform: scale(1.5);
+}
+.mx-right > li{
+  padding-right:30px;
+}
+
+
+
+

@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/form.css') }}">
+
+
+{% from "formhelpers.html" import render_select %}
+
+<form class="row g-3" method="post">
+
+  <div class="form-content row g-3">
+    <div class="col-5">
+        {{ render_select("Division", selections["Divisions"]) }}
+    </div>
+    <div class="col-4">
+        {{ render_select("Department", selections["Departments"]) }}
+    </div>
+    <div class="col-3">
+        {{ render_select("Campus", selections["Campus"]) }}
+    </div>
+
+    <div class="col-5">
+        <b>Keyword</b>
+        <input name="Keyword" type="text" class="form-control" placeholder="Enter course title or keyword" aria-label="State">
+    </div>
+    
+    <div class="col-4">
+        <b>Course Code</b>
+        <input name="Code" type="text" class="form-control" placeholder="Enter course code" aria-label="State">
+    </div>
+    <div class="col-3">
+        {{ render_select("Level", selections["Year"]) }}
+    </div>
+  </div>
+
+
+  <span class="col-8"></span>
+  <div class="col-2">
+    <button type="submit" class="btn btn-secondary custom">Clear Filters</button>
+  </div>
+  <div class="col-2">
+    <button type="submit" class="btn btn-primary custom">Submit</button>
+  </div>
+</form>
+
+        <!-- <script type="text/javascript">
+            alert("helloworld");
+            $(document).load(function () {
+                $(".selectpicker").multiselect({
+                    nonSelectedText: "Select an option",
+                });
+            });
+         </script> -->

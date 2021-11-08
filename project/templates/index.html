@@ -1,0 +1,50 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+
+{% block content %}
+
+
+  <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/index.css') }}">
+  <h1>
+    Welcome to the OneCourse, <br>
+    CARTE's tool for course selections at UofT
+  </h1>
+  <p class="description">
+      OneCourse is a centralized hub for finding detailed course information,engaging in course-related discussions, and developing enrolment plans.
+  </p>
+
+  <table>
+      <tbody>
+          <tr>
+          <td>
+              <i class="fa fa-search fa-3x"></i>
+              <h3> Informative Searching </h3>
+              
+              <p>
+                  OneCourse allows for intelligent course searching by matching not just the terms you search, but ones relevant to them.
+              </p>
+              
+          </td>
+          <td>
+              <i class="fa fa-calendar-alt fa-3x"></i>
+              <h3> Flexible Planning </h3>
+              <p>
+                  OneCourse facilitates course planning based on different major/minor requirements in the form of enrolment paths.
+              </p> 
+              
+          </td>
+          <td>
+              <i class="fa fa-users fa-3x"></i>
+              <h3>Active Discussion </h3>
+              <p>
+                OneCourse provides discussion baords for students to exchange feedback and help their instructors improve.
+              </p>
+          </td>
+          </tr>
+      </tbody>
+  </table>
+  <div class="text-center">
+    <a href="{{url_for('search')}}" class="btn btn-primary btn-lg">Start Searching</a>
+  </div>
+
+{% endblock %}
