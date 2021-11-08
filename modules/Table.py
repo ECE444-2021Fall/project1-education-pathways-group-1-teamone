@@ -12,6 +12,10 @@ class Table(ABC):
         self.dynamodb = boto3.resource('dynamodb', endpoint_url=self.endpoint_url)
         self.table = self.dynamodb.Table(table_name)
 
+    @abstractmethod 
+    def get_table(self):
+        pass
+
     @abstractmethod
     def add_item(self, params):
         pass
