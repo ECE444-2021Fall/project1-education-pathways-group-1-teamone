@@ -8,6 +8,9 @@ class DiscussionTable(Table):
     def __init__(self):
         super().__init__(self.DISCUSSION_BOARD_TABLE)
 
+    def get_table(self):
+        return self.table
+
     # Add an empty discussion board to the table with the provided courseID
     def add_item(self, courseID):
         discussionTableItem = {

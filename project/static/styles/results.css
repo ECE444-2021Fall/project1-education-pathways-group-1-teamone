@@ -1,0 +1,41 @@
+
+.search_result{
+    margin: auto;
+    width: 1400px;
+}
+
+#results-page-table-container table{
+    border-radius: 20px;
+    border-collapse: separate;
+}
+
+#results-page-table-container table td{
+    padding: 8px;
+    border-left: 1px solid #00204E;
+    border-bottom: 1px solid #00204E;
+}
+
+#results-page-table-container table th{
+    padding: 8px;
+    text-align: center;
+    top: 2px;
+    background-color: #00204E;
+    color: white;
+    border-left: 1px solid #00204E;
+    border-bottom: 1px solid #00204E;
+}
+
+#results-page-table-container table th:last-child, 
+#results-page-table-container table td:last-child{
+    border-right: 1px solid #00204E;
+}
+
+.description{
+
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    vertical-align: center;
+}
