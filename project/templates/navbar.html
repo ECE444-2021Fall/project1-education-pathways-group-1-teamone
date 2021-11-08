@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='styles/navbar.css') }}">
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand text-primary" href="/">ONECOURSE</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -11,31 +11,31 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="{{url_for('search')}}">Search</a>
+                    <a class="nav-link text-dark" href="{{url_for('search')}}"><b>Search</b></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="/#">Enroll</a>
+                    <a class="nav-link text-dark" href="/#"><b>Enroll</b></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="/#">Item3</a>
+                    <a class="nav-link text-dark" href="/#"><b>Item3</b></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="/#">Item4</a>
+                    <a class="nav-link text-dark" href="/#"><b>Item4</b></a>
                 </li>
             </ul>
             <ul class="navbar-nav mx-right">
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="/setting">
+                    <a class="nav-link text-dark" href="/setting">
                         <i class="fa fa-fw fa-bell"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="/contact">
+                    <a class="nav-link text-dark" href="/contact">
                         <i class="fa fa-fw fa-cog"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="{{url_for('user', name='Tony')}}">
+                    <a class="nav-link text-dark" href="{{url_for('user', name='Tony')}}">
                         <i class="fa fa-fw fa-user"></i>
                     </a>
                 </li>
