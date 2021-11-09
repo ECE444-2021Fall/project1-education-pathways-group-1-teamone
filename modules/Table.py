@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import boto3
 
-boto3.setup_default_session(profile_name='444')
+# boto3.setup_default_session(profile_name='444')
 
 # Abstract base class for dynamoDB table in AWS
 class Table(ABC):

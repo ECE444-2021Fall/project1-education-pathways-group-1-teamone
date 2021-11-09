@@ -42,11 +42,11 @@ class DiscussionTable(Table):
         #TODO
         pass
 
-    def add_post(self, courseID, userName, time, content):
+    def add_post(self, courseID, userName, time, message):
         postID = str(uuid.uuid4())
-        newPost = {"PostID": postID, "UserName": userName, "Time": time, "Content": content, "NumLikes": 0}
+        newPost = {"PostID": postID, "User": userName, "DateTime": time, "Message": message, "NumLikes": 0}
 
-        response = self.get_table().update_item(
+        self.get_table().update_item(
             Key={'CourseID': courseID},
             UpdateExpression="SET DiscussionBoard = list_append(DiscussionBoard, :i)",
             ExpressionAttributeValues={
@@ -54,11 +54,10 @@ class DiscussionTable(Table):
             },
             ReturnValues="ALL_NEW"
         )
-        return response
+        return newPost
 
     def get_index_of_post(self, courseID, postID):
         discussionBoard = self.get_item(courseID)["DiscussionBoard"]
-        print(discussionBoard)
         for idx, post in enumerate(discussionBoard):
             if post["PostID"] == postID:
                 return idx
@@ -67,27 +66,24 @@ class DiscussionTable(Table):
     def delete_post(self, courseID, postID):
         indexOfPost = self.get_index_of_post(courseID, postID)
         if indexOfPost == -1:
-            return
+            return "400"
 
         response = self.get_table().update_item(
             Key={'CourseID': courseID},
             UpdateExpression=f"REMOVE DiscussionBoard[{indexOfPost}]",
             ReturnValues="UPDATED_NEW"
         )
-        return response
-
+        return response["ResponseMetadata"]["HTTPStatusCode"]
 
     def upvote_post(self, courseID, postID):
         indexOfPost = self.get_index_of_post(courseID, postID)
         if indexOfPost == -1:
-            print("here")
-            return
+            return "400"
         
         post = self.get_item(courseID)["DiscussionBoard"][indexOfPost]
         post["NumLikes"] += 1
 
         self.delete_post(courseID, postID)
-        print(post)
         response = self.get_table().update_item(
             Key={'CourseID': courseID},
             UpdateExpression="SET DiscussionBoard = list_append(DiscussionBoard, :i)",
@@ -96,20 +92,18 @@ class DiscussionTable(Table):
             },
             ReturnValues="ALL_NEW"
         )
-        return response
+        return str(post["NumLikes"])
 
 
     def downvote_post(self, courseID, postID):
         indexOfPost = self.get_index_of_post(courseID, postID)
         if indexOfPost == -1:
-            print("here")
-            return
+            return "400"
         
         post = self.get_item(courseID)["DiscussionBoard"][indexOfPost]
         post["NumLikes"] -= 1
 
         self.delete_post(courseID, postID)
-        print(post)
         response = self.get_table().update_item(
             Key={'CourseID': courseID},
             UpdateExpression="SET DiscussionBoard = list_append(DiscussionBoard, :i)",
@@ -118,7 +112,7 @@ class DiscussionTable(Table):
             },
             ReturnValues="ALL_NEW"
         )
-        return response
+        return str(post["NumLikes"])
 
 if __name__ == "__main__":
     now = datetime.now()
