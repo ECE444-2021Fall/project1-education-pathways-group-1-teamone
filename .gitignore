@@ -139,3 +139,4 @@ cython_debug/
 
 # Lambda files 
 lambdas/dbb-to-opensearch/package/
+lambdas/search/package/
