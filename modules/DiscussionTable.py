@@ -17,30 +17,37 @@ class DiscussionTable(Table):
     def add_item(self, courseID):
         discussionTableItem = {
             "CourseID": courseID,
-            "Likes": {
-                "Homework": 0,
-                "Content": 0,
-                "Exams": 0
-            },
             "DiscussionBoard": []
         }        
-
-        response = self.table.put_item(Item=discussionTableItem)
+        response = self.get_table().put_item(Item=discussionTableItem)
 
         if response['ResponseMetadata']['HTTPStatusCode'] != 200: 
             print("Error creating discussion board for:", courseID)
             print(response)
+
+        return response
+
     def get_item(self, courseID):
             response = self.get_table().get_item(Key={'CourseID': courseID})
             return response['Item']
 
-    def update_item(self):
-        #TODO
-        pass
+    # Updates an existing course item in the database. Param is the parameter to
+    # be updated and value is the value to update it to.
+    def update_item(self, courseID, param, value):
+        response = self.get_table().update_item(
+        Key={
+            'CourseID': courseID,
+        },
+        UpdateExpression=f"set {param}=:p",
+        ExpressionAttributeValues={
+            ':p': value,
+        })
+        return response
 
-    def delete_item(self):
-        #TODO
-        pass
+    # Deletes a course discussion from the database
+    def delete_item(self, courseID):
+        response = self.get_table().delete_item(Key={'CourseID': courseID})
+        return response
 
     def add_post(self, courseID, userName, time, message):
         postID = str(uuid.uuid4())
@@ -56,6 +63,7 @@ class DiscussionTable(Table):
         )
         return newPost
 
+    # Helper function to return the index of a post in DiscussionBoard list
     def get_index_of_post(self, courseID, postID):
         discussionBoard = self.get_item(courseID)["DiscussionBoard"]
         for idx, post in enumerate(discussionBoard):
@@ -63,6 +71,7 @@ class DiscussionTable(Table):
                 return idx
         return -1
 
+    # Deletes a post from the DiscussionBoard list of a course
     def delete_post(self, courseID, postID):
         indexOfPost = self.get_index_of_post(courseID, postID)
         if indexOfPost == -1:
@@ -75,6 +84,7 @@ class DiscussionTable(Table):
         )
         return response["ResponseMetadata"]["HTTPStatusCode"]
 
+    # Increments the likes of a post in the DiscussionBoard list 
     def upvote_post(self, courseID, postID):
         indexOfPost = self.get_index_of_post(courseID, postID)
         if indexOfPost == -1:
@@ -94,7 +104,7 @@ class DiscussionTable(Table):
         )
         return str(post["NumLikes"])
 
-
+    # Decrements the likes of a post in the DiscussionBoard list 
     def downvote_post(self, courseID, postID):
         indexOfPost = self.get_index_of_post(courseID, postID)
         if indexOfPost == -1:
@@ -102,7 +112,6 @@ class DiscussionTable(Table):
         
         post = self.get_item(courseID)["DiscussionBoard"][indexOfPost]
         post["NumLikes"] -= 1
-
         self.delete_post(courseID, postID)
         response = self.get_table().update_item(
             Key={'CourseID': courseID},
@@ -114,6 +123,7 @@ class DiscussionTable(Table):
         )
         return str(post["NumLikes"])
 
+# For manual testing purposes
 if __name__ == "__main__":
     now = datetime.now()
     date_time = now.strftime("%m/%d/%Y, %H:%M")
