@@ -52,11 +52,13 @@ def test_add_item(mocker, mocked_get_table):
         "Name": "Test",
         "Email": "test@thisisatest.com",
         "Password": "testpass",
-        "Type": str(UserTypes.STUDENT_TYPE),
+        "Type": str(UserTypes.STUDENT_TYPE)
+    }
+    params_complete = params.copy().update({
         "Active": True,
         "EnrolmentPaths": [],
         "MainPath": ""
-    }
+    })
     response = user_table.add_item(params)
     put_item_spy.assert_called_once_with(Item=params, ConditionExpression='attribute_not_exists(Username)')
     assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
