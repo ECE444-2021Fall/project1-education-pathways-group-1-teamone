@@ -41,7 +41,6 @@ def mocked_get_table():
     return MockedDynamoTable
 
 def test_add_item(mocker, mocked_get_table):
-    
     mocker.patch('modules.UserTable.UserTable.get_table', return_value=MockedDynamoTable)
     user_table = UserTable()
 

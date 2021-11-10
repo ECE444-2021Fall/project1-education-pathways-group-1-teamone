@@ -70,16 +70,3 @@ class UserTable(Table):
     def delete_item(self, username):
         response = self.get_table().delete_item(Key={'Username': username})
         return response
-
-if __name__ == "__main__":
-    user_table = UserTable()
-    params = {
-        "Username" : "testUser",
-        "Name": "Test",
-        "Email": "test@thisisatest.com",
-        "Password": "testpass",
-        "Type": str(UserTypes.STUDENT_TYPE)
-    }
-    # user_table.delete_item(params['Username'])
-    user_table.add_item(params)
-    user_table.get_item("testUser")
