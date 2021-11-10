@@ -66,3 +66,36 @@ i.fa-heart:hover {
     transform: scale(1.5);
     
 }
+
+div.course_header {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+div.course_header h1 {
+  margin: 0;
+}
+div.course_header a {
+  position: absolute;
+  right:0;
+  border: 3px solid black;
+  border-color: #2196F3;
+  color: dodgerblue;
+  background-color: transparent;
+  color: black;
+  padding: 4px 30px;
+  font-size:large;
+  cursor: pointer;
+  border-radius: 7px;
+  text-decoration: none;
+}
+div.course_header a:hover {
+  background: #2196F3;
+  color: white;
+}
+div.course_header a img{
+    width:25px;
+    height:25px;
+    margin-right: 20px;
+}
+

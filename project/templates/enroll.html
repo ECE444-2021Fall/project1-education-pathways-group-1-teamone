@@ -1,0 +1,65 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+
+{% block content %}
+    <body>
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/enroll.css') }}">
+    <script type="text/javascript">var paths_json = {{paths|tojson}}</script>
+
+    <h1>Enrollment Cart</h1>
+    <h3>Current Path</h3>
+    <div class="row">
+        
+        <div class="col-7">
+            <select class="form-select form-select-lg" id="paths" onchange="render_table()">
+                {% for path in paths%}
+                    {% if loop.index == 1%}
+                        {% set first_path = path%}
+                        <option value="1" selected style="padding: 24px;">{{path}}</option>
+                    {% else%}
+                        <option value="1" style="padding: 24px;">{{path}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="operations col-5">
+            <button onclick="popup()"> Add New </button>      
+            <button type="submit" name="delete_current" value="delete_current"> Delete Current </button>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="align-middle col-2">Code</th>
+                <th class="align-middle col-5">Name</th>
+                <th class="align-middle col-3">Semester</th>
+                <th class="align-middle text-center col-2">Drop Course</th>
+            </tr>
+        </thead>
+        <tbody id="path_courses">
+            <!-- {% for entry in first_path%}
+                <tr>
+                    <td class="align-middle col-2">{{entry["Code"]}}</td>
+                    <td class="align-middle col-5">{{entry["Name"]}}</td>
+                    <td class="align-middle col-3">{{entry["Semester"]}}</td>
+                    <td class="align-middle col-2"><button class="btn btn-secondary">drop</button></td>
+                </tr>
+            {% endfor %}
+             -->
+        </tbody>
+        </table>
+
+    <div class="bg-model">
+        <div class="model-contents">
+
+            <div class="close" onclick="off()">+</div>
+
+            <form method="POST" action="/enroll">
+                <input type="text" placeholder="Path name" required>
+                <button class="btn btn-primary" type="submit" name="add_new" value="add_new">Submit</button>
+            </form>
+        </div>
+    </div>
+    <script type="application/javascript" src="{{url_for('static', filename='scripts/enroll.js')}}"></script>
+{% endblock %}

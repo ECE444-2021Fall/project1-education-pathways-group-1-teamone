@@ -11,26 +11,34 @@
 
   <div class="form-content row g-3">
     <div class="col-5">
-        {{ render_select("Division", selections["Divisions"]) }}
+        {{ render_select("Division", form.getlist("Division"), selections["Divisions"]) }}
     </div>
     <div class="col-4">
-        {{ render_select("Department", selections["Departments"]) }}
+        {{ render_select("Department", form.getlist("Department"), selections["Departments"]) }}
     </div>
     <div class="col-3">
-        {{ render_select("Campus", selections["Campus"]) }}
+        {{ render_select("Campus", form.getlist("Campus"), selections["Campus"]) }}
     </div>
 
     <div class="col-5">
         <b>Keyword</b>
-        <input name="Keyword" type="text" class="form-control" placeholder="Enter course title or keyword" aria-label="State">
+        {% if "Keyword" in form and form["Keyword"]!="" %}
+            <input name="Keyword" type="text" class="form-control" value="{{form['Keyword']}}" aria-label="State">
+        {% else %}
+            <input name="Keyword" type="text" class="form-control" placeholder="Enter course title or keyword" aria-label="State">
+        {% endif %}
     </div>
     
     <div class="col-4">
         <b>Course Code</b>
-        <input name="Code" type="text" class="form-control" placeholder="Enter course code" aria-label="State">
+        {% if "Code" in form and form["Code"]!="" %}
+            <input name="Code" type="text" class="form-control" value="{{form['Code']}}" aria-label="State" >
+        {% else %}
+            <input name="Code" type="text" class="form-control" placeholder="Enter course code" aria-label="State">
+         {% endif %}
     </div>
     <div class="col-3">
-        {{ render_select("Level", selections["Year"]) }}
+        {{ render_select("Level", form.getlist("Level"), selections["Level"]) }}
     </div>
   </div>
 
