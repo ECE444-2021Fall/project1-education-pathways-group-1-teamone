@@ -18,8 +18,6 @@ headers = { "Content-Type": "application/json" }
 def handler(event, context):
     count = 0
     try:
-        # print("Input:")
-        # print(json.dumps(event))
         for record in event['Records']:
             # Get the primary key for use as the OpenSearch ID
             id = record['dynamodb']['Keys']['CourseID']['S']

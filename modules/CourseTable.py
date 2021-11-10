@@ -27,6 +27,7 @@ class CourseTable(Table):
             response = self.get_table().get_item(Key={'CourseID': courseID})
         except ClientError as e:
             print(e.response['Error']['Message'])
+            raise(ClientError)
         else:
             return response['Item']
         

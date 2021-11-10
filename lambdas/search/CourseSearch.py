@@ -83,7 +83,7 @@ def handler(event, context):
         "from": params["from"] if "from" in params else 0,
         "size": params["numResults"] if "numResults" in params else 20,
             }
-
+    # If a query string is present, search using that string
     if params["queryString"]:
         query["query"] = {
                     "multi_match": {
@@ -92,6 +92,7 @@ def handler(event, context):
                     },
                 }
     else:
+        # If now query is present, we can simply match and return all results
         query["query"] = {"match_all": {}}
 
     headers = { "Content-Type": "application/json" }
