@@ -47,7 +47,6 @@ function toggleHeartColor(tag_heart, code, postID){
 
 }
 
-
 function countLines(ele) {
   var styles = window.getComputedStyle(ele, null);
   var lh = parseInt(styles.lineHeight, 10);
@@ -63,27 +62,27 @@ if(desLc <= 2){
     btnToggleText.remove();
 }
 
-// function buildTable(course){
-//     var table = document.getElementById("courseInfo");
-//     i = 0;
-//     for(var key in course){
-//         if(i >= 6){
-//             return;
-//         }
-//         var content = course[key]
-//         if(content != null && content.length > 0){
-//             var row = `<tr> 
-//                 <td class="col-2"><h5>${key}</h5></td>`
-//             if(key == "Course Description"){   
-//                 row += `<td class="col-8 description"> <p class="many-text">${course[key]}</p> 
-//                         <span type="button" class="toggle-text" onclick="toggleText(this)">Read More</span></td></tr>`
-//             }
-//             else{
-//                 row += `<td class="col-8 description">${course[key]}</td></tr>`
-//             }
-//             table.innerHTML += row;
-//             i += 1;
-//         }
+function buildTable(course){
+    var table = document.getElementById("courseInfo");
+    i = 0;
+    for(var key in course){
+        if(i >= 6){
+            return;
+        }
+        var content = course[key]
+        if(content != null && content.length > 0){
+            var row = `<tr> 
+                <td class="col-2"><h5>${key}</h5></td>`
+            if(key == "Course Description"){   
+                row += `<td class="col-8 description"> <p class="many-text">${course[key]}</p> 
+                        <span type="button" class="toggle-text" onclick="toggleText(this)">Read More</span></td></tr>`
+            }
+            else{
+                row += `<td class="col-8 description">${course[key]}</td></tr>`
+            }
+            table.innerHTML += row;
+            i += 1;
+        }
 
-//     }
-// }
+    }
+}

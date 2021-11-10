@@ -2,8 +2,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-   
     <section class="course_info">
 
         {% if course %}
@@ -81,5 +79,4 @@
     </section>
     <script type="application/javascript" src="{{url_for('static', filename='scripts/course.js')}}"></script>
     <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/course.css') }}">
-
 {% endblock %}
