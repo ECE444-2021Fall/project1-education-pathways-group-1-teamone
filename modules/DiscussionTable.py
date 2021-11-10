@@ -122,14 +122,3 @@ class DiscussionTable(Table):
             ReturnValues="ALL_NEW"
         )
         return str(post["NumLikes"])
-
-# For manual testing purposes
-if __name__ == "__main__":
-    now = datetime.now()
-    date_time = now.strftime("%m/%d/%Y, %H:%M")
-    courseID = "GGR107H1"
-    discussion_table = DiscussionTable()
-    # print(discussion_table.add_post(courseID, "Griffin Hadfield", date_time, "This course is meh!"))
-    # print(discussion_table.delete_post(courseID, "199b4bca-4790-4a4d-8196-7d647995b602"))
-    # print(discussion_table.get_item(courseID))
-    print(discussion_table.downvote_post(courseID, "d7fce19c-5a07-428c-a080-3416dc194ffe"))
