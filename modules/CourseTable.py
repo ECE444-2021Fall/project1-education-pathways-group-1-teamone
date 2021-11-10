@@ -29,7 +29,7 @@ class CourseTable(Table):
             print(e.response['Error']['Message'])
             raise(ClientError)
         else:
-            return response['Item']
+            return response['Item'] if 'Item' in response else {}
         
     # Updates an existing course item in the database. Param is the parameter to
     # be updated and value is the value to update it to.
@@ -52,5 +52,5 @@ class CourseTable(Table):
 if __name__ == "__main__":
     course_table = CourseTable()
     print(course_table.get_item("ECE557H1"))
-    course_table.update_item("ECE557H1", "Campus", "Canadaaa")
+    course_table.get_item("ECE557H1")
     print(course_table.get_item("ECE557H1"))
