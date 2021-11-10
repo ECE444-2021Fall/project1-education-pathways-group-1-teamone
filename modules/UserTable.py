@@ -22,6 +22,11 @@ class UserTable(Table):
 
     # Add the user to the user table with the provided params IF the user does not exist
     def add_item(self, params):
+        params_copy = {}
+        for key in params:
+            key_copy = key
+            key_copy.capitalize()
+            params_copy[key_copy] = params[key]
         try:
             params.update({
                 "Active": True,
@@ -38,6 +43,7 @@ class UserTable(Table):
                     },
                     "HTTPStatusCode": HTTPStatus.CONFLICT.value
                 }
+            print(e)
         else:
             if response['ResponseMetadata']['HTTPStatusCode'] != HTTPStatus.OK.value: 
                 print("Error creating user for:", params["Username"])
@@ -51,7 +57,9 @@ class UserTable(Table):
             print(e.response['Error']['Message'])
             raise(ClientError)
         else:
-            return response['Item'] if 'Item' in response else {}
+            item = response['Item'] if 'Item' in response else {}
+            status = HTTPStatus.OK.value if item else HTTPStatus.NOT_FOUND.value
+            return {**item, "HTTPStatusCode": status}
         
     # Updates an existing user item in the database. Param is the parameter to
     # be updated and value is the value to update it to.
@@ -93,7 +101,7 @@ class UserTable(Table):
         user_obj = self.get_item(username)
         status = HTTPStatus.OK.value
         data = {}
-        if 'EnrolmentPaths' not in user_obj and path_name not in user_obj['EnrolmentPaths']:
+        if 'EnrolmentPaths' not in user_obj or path_name not in user_obj['EnrolmentPaths']:
             status = HTTPStatus.NOT_FOUND.value
         else:
             data = user_obj['EnrolmentPaths'][path_name]
