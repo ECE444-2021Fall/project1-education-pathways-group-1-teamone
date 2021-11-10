@@ -34,12 +34,12 @@ class UserTable(Table):
             if e.response['Error']['Code']=='ConditionalCheckFailedException':  
                 response = {
                     "ResponseMetadata": {
-                        "HTTPStatusCode": HTTPStatus.CONFLICT
+                        "HTTPStatusCode": HTTPStatus.CONFLICT.value
                     },
-                    "HTTPStatusCode": HTTPStatus.CONFLICT
+                    "HTTPStatusCode": HTTPStatus.CONFLICT.value
                 }
         else:
-            if response['ResponseMetadata']['HTTPStatusCode'] != HTTPStatus.OK: 
+            if response['ResponseMetadata']['HTTPStatusCode'] != HTTPStatus.OK.value: 
                 print("Error creating user for:", params["Username"])
                 print(response)
             return response
@@ -47,7 +47,6 @@ class UserTable(Table):
     def get_item(self, username):
         try:
             response = self.get_table().get_item(Key={'Username': username})
-            print(response)
         except ClientError as e:
             print(e.response['Error']['Message'])
             raise(ClientError)
@@ -92,14 +91,14 @@ class UserTable(Table):
     # Returns HTTP status NOT_FOUND if the path does not exist
     def get_enrol_path(self, username, path_name):
         user_obj = self.get_item(username)
-        status = HTTPStatus.OK
+        status = HTTPStatus.OK.value
         data = {}
         if 'EnrolmentPaths' not in user_obj and path_name not in user_obj['EnrolmentPaths']:
-            status = HTTPStatus.NOT_FOUND
+            status = HTTPStatus.NOT_FOUND.value
         else:
             data = user_obj['EnrolmentPaths'][path_name]
         return {
-            **data,
+            "Path": data,
             "ResponseMetadata": {
                 "HTTPStatusCode": status
             },
@@ -108,9 +107,9 @@ class UserTable(Table):
     
     # Remove a specific enrolment path for a given user
     def remove_path(self, username, path_name):
-        status = HTTPStatus.OK
-        if self.get_enrol_path(username, path_name)["HTTPStatusCode"] == HTTPStatus.NOT_FOUND:
-            status = HTTPStatus.NOT_FOUND
+        status = HTTPStatus.OK.value
+        if self.get_enrol_path(username, path_name)["HTTPStatusCode"] == HTTPStatus.NOT_FOUND.value:
+            status = HTTPStatus.NOT_FOUND.value
         else:
             response = self.get_table().update_item(
                 Key={'Username': username},
@@ -134,10 +133,10 @@ class UserTable(Table):
     # }
     # **** Note that the only REQUIRED attribute in the course object is the Code ****
     def add_course_to_path(self, username, path_name, course):
-        status = HTTPStatus.OK
+        status = HTTPStatus.OK.value
         resp = None
-        if self.get_enrol_path(username, path_name)["HTTPStatusCode"] == HTTPStatus.NOT_FOUND:
-            status = HTTPStatus.BAD_REQUEST
+        if self.get_enrol_path(username, path_name)["HTTPStatusCode"] == HTTPStatus.NOT_FOUND.value:
+            status = HTTPStatus.BAD_REQUEST.value
         else:
             attr = f"EnrolmentPaths.{path_name}"
             resp = self.get_table().update_item(
@@ -157,7 +156,7 @@ class UserTable(Table):
     
     # Given a course code and enrolment path, find the index of the course in the path list
     def get_index_of_course(self, username, path_name, course_code):
-        path = self.get_enrol_path(username, path_name)
+        path = self.get_enrol_path(username, path_name)['Path']
         for idx, course in enumerate(path):
             if course["Code"] == course_code:
                 return idx
@@ -165,9 +164,9 @@ class UserTable(Table):
 
     # Given a course code and enrolment path, remove the course from the path list
     def remove_course_from_path(self, username, path_name, course_code):
-        status = HTTPStatus.BAD_REQUEST
+        status = HTTPStatus.BAD_REQUEST.value
         resp = None
-        if self.get_enrol_path(username, path_name)["HTTPStatusCode"] != HTTPStatus.NOT_FOUND:
+        if self.get_enrol_path(username, path_name)["HTTPStatusCode"] != HTTPStatus.NOT_FOUND.value:
             index = self.get_index_of_course(username, path_name, course_code)
             if index != -1:
                 attr = f"EnrolmentPaths.{path_name}[{index}]"
