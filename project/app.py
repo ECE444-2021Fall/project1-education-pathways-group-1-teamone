@@ -2,24 +2,17 @@ from flask import Flask, render_template, request, session
 from flask_bootstrap import Bootstrap
 from flask_cors import CORS
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
+from wtforms import StringField, SubmitField, SelectField, PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import DataRequired, Email, EqualTo. InputRequired
 from flask import Flask, render_template, session, redirect, url_for, flash
 import pandas as pd
 import json
-import datetime
 import requests
-
-from flask_moment import Moment
 from datetime import datetime
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, PasswordField, BooleanField
-# from wtforms.validators import DataRequired
 from wtforms import validators
 from wtforms.fields.html5 import EmailField
-from flask import Flask, render_template, session, redirect, url_for, flash
-from wtforms.validators import InputRequired, Email, EqualTo
 from markupsafe import Markup
 
 
