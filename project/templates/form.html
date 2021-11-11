@@ -10,17 +10,20 @@
 <form class="row g-3" method="post">
 
   <div class="form-content row g-3">
-    <div class="col-5">
+    <div class="col-6">
         {{ render_select("Division", form.getlist("Division"), selections["Divisions"]) }}
     </div>
-    <div class="col-4">
+    <div class="col-6">
         {{ render_select("Department", form.getlist("Department"), selections["Departments"]) }}
     </div>
-    <div class="col-3">
+    <div class="col-6">
         {{ render_select("Campus", form.getlist("Campus"), selections["Campus"]) }}
     </div>
+    <div class="col-6">
+        {{ render_select("Level", form.getlist("Level"), selections["Level"]) }}
+    </div>
 
-    <div class="col-5">
+    <div class="col-6">
         <b>Keyword</b>
         {% if "Keyword" in form and form["Keyword"]!="" %}
             <input name="Keyword" type="text" class="form-control" value="{{form['Keyword']}}" aria-label="State">
@@ -29,7 +32,7 @@
         {% endif %}
     </div>
     
-    <div class="col-4">
+    <div class="col-6">
         <b>Course Code</b>
         {% if "Code" in form and form["Code"]!="" %}
             <input name="Code" type="text" class="form-control" value="{{form['Code']}}" aria-label="State" >
@@ -37,9 +40,7 @@
             <input name="Code" type="text" class="form-control" placeholder="Enter course code" aria-label="State">
          {% endif %}
     </div>
-    <div class="col-3">
-        {{ render_select("Level", form.getlist("Level"), selections["Level"]) }}
-    </div>
+    
   </div>
 
 
