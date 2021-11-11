@@ -11,6 +11,17 @@ import json
 import datetime
 import requests
 
+from flask_moment import Moment
+from datetime import datetime
+from flask_wtf import Form
+from wtforms import StringField, SubmitField, PasswordField
+# from wtforms.validators import DataRequired
+from wtforms import validators
+from wtforms.fields.html5 import EmailField
+from flask import Flask, render_template, session, redirect, url_for, flash
+from wtforms.validators import InputRequired, Email
+from markupsafe import Markup
+
 
 df = pd.read_pickle('project/resources/df_processed.pickle').set_index("Code")
 divisions = sorted([
@@ -199,8 +210,48 @@ def upgrade_vote():
 
 @app.route('/user/<name>', methods=['GET', 'POST'])
 def user(name):
-    return render_template('user.html', name=None)
+    if session.get('user_authenticated') == True:
+        return render_template('user.html', name=session['name'])
+    else:
+        form = NameForm()
+        flash('Please login to access User Tab.')
+        # Once a Pop Up use below
+        return render_template('login.html', form=form)
 
+#Log In Code
+class NameForm(Form):
+    name = StringField('Username', validators=[DataRequired('Please provide a valid username.')])    
+    password = PasswordField('Password', [validators.DataRequired('Please provide a strong password.')])
+    # submit = SubmitField('Submit')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+
+    name = None
+    password = None
+    form = NameForm()
+    if form.validate_on_submit():
+        old_name = session.get('name')
+        old_email = session.get('password')
+        if str(form.password.data).isalpha():
+            flash('Please include numbers in your password.')
+        elif str(form.password.data).isdigit():
+            flash('Please include alphabets in your password.')
+        elif str(form.password.data).isalnum():
+            flash('Please include special characters in your password.')
+        else:
+            #Call API to Update the BackEnd
+            session['name'] = form.name.data
+            session['password'] = form.password.data
+            session['user_authenticated'] = True
+
+        session['name'] = form.name.data
+        session['password'] = form.password.data
+       
+        return redirect(url_for('login'))
+
+    return render_template('login.html', form=form, name=session.get('name'), password=session.get('password'))
+    # return render_template('login.html')
 
 
 if __name__ == '__main__':
