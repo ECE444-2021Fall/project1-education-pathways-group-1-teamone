@@ -1,10 +1,12 @@
 
 
 a.navbar-brand.text-primary:hover{
-   color:lightblue !important;
+   color:blue !important;
 }
 a.navbar-brand.text-primary{
-    padding-left: 50px;
+  color:#3C64B1 !important;
+  font-weight: bold;
+  padding-left: 50px;
 }
 a.navbar-brand.img-primary{
   height: 10px;
