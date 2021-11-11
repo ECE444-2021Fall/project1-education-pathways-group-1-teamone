@@ -1,0 +1,10 @@
+h1,h2,h3{
+    margin-top: 100px;
+    margin-bottom: 15px;
+    color:#2196F3 !important;
+ }
+
+.submit_button {
+    margin-top: 10px;
+    align-content: center;
+}
