@@ -5,18 +5,19 @@
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/login.css') }}">
 
 <div class="container">    
-	<h1>LogIn</h1>
+	<h1>Register </h1>
 	{% for message in get_flashed_messages() %}
 	<div class="alert alert-warning">
 		{{ message }}
 	</div>    
 	{% endfor %}    
 	{% block page_content %}
-    {{ wtf.quick_form(form, id="loginUser") }}
+    Please provide the following information.
+    {{ wtf.quick_form(form, id="registerUser") }}
     <div class="submit_button">
-        <button type="submit" form="loginUser" class="btn btn-primary">Log In</button>
-    	<a href="{{url_for('register')}}" class="btn btn-primary pull-right">Register</a>
-	</div>
+        <button type="submit" form="registerUser" class="btn btn-primary">Register</button>
+        <a href="{{url_for('login')}}" class="btn btn-primary pull-right">Log In</a> 
+    </div>
 
 	{% endblock %}
 </div>

@@ -8,3 +8,5 @@ h1,h2,h3{
     margin-top: 10px;
     align-content: center;
 }
+
+.has_errors { border: 1px solid #ff0000 }

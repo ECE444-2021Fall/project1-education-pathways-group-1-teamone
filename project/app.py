@@ -14,12 +14,12 @@ import requests
 from flask_moment import Moment
 from datetime import datetime
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField
 # from wtforms.validators import DataRequired
 from wtforms import validators
 from wtforms.fields.html5 import EmailField
 from flask import Flask, render_template, session, redirect, url_for, flash
-from wtforms.validators import InputRequired, Email
+from wtforms.validators import InputRequired, Email, EqualTo
 from markupsafe import Markup
 
 
@@ -167,7 +167,11 @@ def enroll():
         elif request.form.get("delete_current"):
             pass
         return redirect(url_for("enroll"))
-    
+
+    if session.get('user_authenticated') != True:
+        flash('Please login to access Login Tab.')
+        return redirect(url_for("login"))
+
     paths = {
         "path1":[
             {
@@ -213,23 +217,53 @@ def user(name):
     if session.get('user_authenticated') == True:
         return render_template('user.html', name=session['name'])
     else:
-        form = NameForm()
+        form = LogInForm()
         flash('Please login to access User Tab.')
-        # Once a Pop Up use below
         return render_template('login.html', form=form)
 
 #Log In Code
-class NameForm(Form):
+class LogInForm(Form):
     name = StringField('Username', validators=[DataRequired('Please provide a valid username.')])    
     password = PasswordField('Password', [validators.DataRequired('Please provide a strong password.')])
+    remember_me = BooleanField('Remember Me')
     # submit = SubmitField('Submit')
+
+#Log In Code
+class RegisterForm(Form):
+    username = StringField('Username', validators=[DataRequired('Please provide a valid username.')])
+    name = StringField('Full Name', validators=[DataRequired('Please provide a valid username.')])    
+    email = EmailField('Email', [validators.DataRequired(), validators.Email()])
+    userType = SelectField(u'User Type', choices=[('student', 'Student'), ('professor', 'Professor'), ('admin', 'Course Admin'), ('developer', 'Application Develooper')])
+    password = PasswordField('Password', [validators.DataRequired('Please provide a strong password.')])
+    # password = PasswordField('Password', [InputRequired(), EqualTo(fieldname='passwordConfirm', message='Passwords must match')])
+    passwordConfirm = PasswordField('Repeat Password')
+
+    # submit = SubmitField('Submit')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        if str(form.password.data) != str(form.passwordConfirm.data):
+            flash('Passwords must match')
+            # return redirect(url_for('register'))
+        elif str(form.password.data).isalpha():
+            flash('Please include numbers in your password.')
+        elif str(form.password.data).isdigit():
+            flash('Please include alphabets in your password.')
+        elif str(form.password.data).isalnum():
+            flash('Please include special characters in your password.')
+        else:
+            flash('Thanks for registering. Please sign In.')
+            return redirect(url_for('login'))
+    return render_template('register.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
     name = None
     password = None
-    form = NameForm()
+    form = LogInForm()
     if form.validate_on_submit():
         old_name = session.get('name')
         old_email = session.get('password')
@@ -242,11 +276,7 @@ def login():
         else:
             #Call API to Update the BackEnd
             session['name'] = form.name.data
-            session['password'] = form.password.data
             session['user_authenticated'] = True
-
-        session['name'] = form.name.data
-        session['password'] = form.password.data
        
         return redirect(url_for('login'))
 
