@@ -2,14 +2,18 @@ from flask import Flask, render_template, request, session
 from flask_bootstrap import Bootstrap
 from flask_cors import CORS
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
+from wtforms import StringField, SubmitField, SelectField, PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import DataRequired, Email, EqualTo, InputRequired
 from flask import Flask, render_template, session, redirect, url_for, flash
 import pandas as pd
 import json
-import datetime
 import requests
+from datetime import datetime
+from flask_wtf import Form
+from wtforms import validators
+from wtforms.fields.html5 import EmailField
+from markupsafe import Markup
 
 
 df = pd.read_pickle('project/resources/df_processed.pickle').set_index("Code")
@@ -156,7 +160,11 @@ def enroll():
         elif request.form.get("delete_current"):
             pass
         return redirect(url_for("enroll"))
-    
+
+    if session.get('user_authenticated') != True:
+        flash('Please login to access Login Tab.')
+        return redirect(url_for("login"))
+
     paths = {
         "path1":[
             {
@@ -199,8 +207,63 @@ def upgrade_vote():
 
 @app.route('/user/<name>', methods=['GET', 'POST'])
 def user(name):
-    return render_template('user.html', name=None)
+    if session.get('user_authenticated') == True:
+        return render_template('user.html', name=session['name'])
+    else:
+        form = LogInForm()
+        flash('Please login to access User Tab.')
+        return render_template('login.html', form=form)
 
+#Log In Code
+class LogInForm(Form):
+    name = StringField('Username', validators=[DataRequired('Please provide a valid username.')])    
+    password = PasswordField('Password', [validators.DataRequired('Please provide a valid password.')])
+    remember_me = BooleanField('Remember Me')
+    # submit = SubmitField('Submit')
+
+#Register Code
+class RegisterForm(Form):
+    username = StringField('Username', validators=[DataRequired('Please provide a valid username.')])
+    name = StringField('Full Name', validators=[DataRequired('Please provide a valid name.')])    
+    email = EmailField('Email', [validators.DataRequired(), validators.Email()])
+    userType = SelectField(u'User Type', choices=[('student', 'Student'), ('professor', 'Professor'), ('admin', 'Course Admin'), ('developer', 'Application Developer')])
+    password = PasswordField('Password', [validators.DataRequired('Please provide a strong password.')])
+    # password = PasswordField('Password', [InputRequired(), EqualTo(fieldname='passwordConfirm', message='Passwords must match')])
+    passwordConfirm = PasswordField('Repeat Password')
+
+    # submit = SubmitField('Submit')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        if str(form.password.data) != str(form.passwordConfirm.data):
+            flash('Passwords must match')
+            # return redirect(url_for('register'))
+        elif str(form.password.data).isalpha():
+            flash('Please include numbers in your password.')
+        elif str(form.password.data).isdigit():
+            flash('Please include alphabets in your password.')
+        elif str(form.password.data).isalnum():
+            flash('Please include special characters in your password.')
+        else:
+            flash('Thanks for registering. Please sign In.')
+            return redirect(url_for('login'))
+    return render_template('register.html', form=form)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+
+    name = None
+    password = None
+    form = LogInForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        #Call API to Update the BackEnd
+        session['name'] = form.name.data
+        session['user_authenticated'] = True
+        return redirect(url_for('index'))
+
+    return render_template('login.html', form=form, name=session.get('name'), password=session.get('password'))
 
 
 if __name__ == '__main__':

@@ -8,8 +8,10 @@ a.navbar-brand.text-primary{
   font-weight: bold;
   padding-left: 50px;
 }
-
-
+a.navbar-brand.img-primary{
+  height: 10px;
+  padding-left: 50px;
+}
 
 .mx-auto > li{
   padding-left:40px;
@@ -27,6 +29,10 @@ nav i.fa-fw:hover {
   padding-right:30px;
 }
 
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
 
 
 
