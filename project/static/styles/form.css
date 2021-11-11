@@ -19,3 +19,8 @@
 button{
     font-size: large;
 }
+
+.btn-primary{
+    background-color: #3C64B1;
+    border-color: #3C64B1;
+}
