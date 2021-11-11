@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import DataRequired, Email, EqualTo. InputRequired
+from wtforms.validators import DataRequired, Email, EqualTo, InputRequired
 from flask import Flask, render_template, session, redirect, url_for, flash
 import pandas as pd
 import json
