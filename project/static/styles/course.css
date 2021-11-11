@@ -68,7 +68,7 @@ div.course_header {
 div.course_header h1 {
   margin: 0;
 }
-div.course_header a {
+div.course_header button {
   position: absolute;
   right:0;
   border: 3px solid black;
@@ -82,13 +82,58 @@ div.course_header a {
   border-radius: 7px;
   text-decoration: none;
 }
-div.course_header a:hover {
+div.course_header button:hover {
   background: #2196F3;
   color: white;
 }
-div.course_header a img{
+div.course_header button img{
     width:25px;
     height:25px;
     margin-right: 20px;
 }
 
+
+.bg-model {
+	background-color: rgba(0, 0, 0, 0.8);
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+    left:0;
+	display: none;
+	justify-content: center;
+	align-items: center;
+}
+
+.model-contents {
+	height: 280px;
+	width: 500px;
+	background-color: white;
+	text-align: center;
+	padding: 20px;
+	position: relative;
+	border-radius: 4px;
+}
+
+form.enroll_course input {
+	margin: 30px auto;
+	display: block;
+	width: 70%;
+	padding: 8px;
+	border: 1px solid gray;
+}
+
+form select {
+	margin: 40px auto;
+	display: block;
+}
+
+.close {
+	position: absolute;
+	top: 0;
+	right: 8px;
+	font-size: 35px;
+	color: #333;
+	transform: rotate(45deg);
+	cursor: pointer;
+}
