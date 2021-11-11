@@ -5,8 +5,8 @@
 
   <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/index.css') }}">
   <h1>
-    Welcome to the OneCourse, <br>
-    CARTE's tool for course selections at UofT
+    Welcome to <span style="color:#3C64B1;">OneCourse</span>,<br>
+    CARTE's tool for course selections at UofT.
   </h1>
   <p class="description">
       OneCourse is a centralized hub for finding detailed course information,engaging in course-related discussions, and developing enrolment plans.
@@ -16,7 +16,7 @@
       <tbody>
           <tr>
           <td>
-              <i class="fa fa-search fa-3x"></i>
+              <i class="fa fa-search fa-3x" style="color:#3C64B1"></i>
               <h3> Informative Searching </h3>
               
               <p>
@@ -25,15 +25,15 @@
               
           </td>
           <td>
-              <i class="fa fa-calendar-alt fa-3x"></i>
+              <i class="fa fa-calendar-alt fa-3x" style="color:#3C64B1"></i>
               <h3> Flexible Planning </h3>
               <p>
-                  OneCourse facilitates course planning based on different major/minor requirements in the form of enrolment paths.
+                  OneCourse facilitates course planning based on different degree requirements in the form of enrolment paths.
               </p> 
               
           </td>
           <td>
-              <i class="fa fa-users fa-3x"></i>
+              <i class="fa fa-users fa-3x" style="color:#3C64B1"></i>
               <h3>Active Discussion </h3>
               <p>
                 OneCourse provides discussion baords for students to exchange feedback and help their instructors improve.
@@ -44,6 +44,7 @@
   </table>
   <div class="text-center">
     <a href="{{url_for('search')}}" class="btn btn-primary btn-lg">Start Searching</a>
+    <!--<a><img src="/static/images/CARTE_logo.jpg" class="pull-right" style="max-width: 25%"></a>-->
   </div>
-
+  
 {% endblock %}
