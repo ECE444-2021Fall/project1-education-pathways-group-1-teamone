@@ -217,16 +217,16 @@ def user(name):
 #Log In Code
 class LogInForm(Form):
     name = StringField('Username', validators=[DataRequired('Please provide a valid username.')])    
-    password = PasswordField('Password', [validators.DataRequired('Please provide a strong password.')])
+    password = PasswordField('Password', [validators.DataRequired('Please provide a valid password.')])
     remember_me = BooleanField('Remember Me')
     # submit = SubmitField('Submit')
 
-#Log In Code
+#Register Code
 class RegisterForm(Form):
     username = StringField('Username', validators=[DataRequired('Please provide a valid username.')])
-    name = StringField('Full Name', validators=[DataRequired('Please provide a valid username.')])    
+    name = StringField('Full Name', validators=[DataRequired('Please provide a valid name.')])    
     email = EmailField('Email', [validators.DataRequired(), validators.Email()])
-    userType = SelectField(u'User Type', choices=[('student', 'Student'), ('professor', 'Professor'), ('admin', 'Course Admin'), ('developer', 'Application Develooper')])
+    userType = SelectField(u'User Type', choices=[('student', 'Student'), ('professor', 'Professor'), ('admin', 'Course Admin'), ('developer', 'Application Developer')])
     password = PasswordField('Password', [validators.DataRequired('Please provide a strong password.')])
     # password = PasswordField('Password', [InputRequired(), EqualTo(fieldname='passwordConfirm', message='Passwords must match')])
     passwordConfirm = PasswordField('Repeat Password')
@@ -257,24 +257,13 @@ def login():
     name = None
     password = None
     form = LogInForm()
-    if form.validate_on_submit():
-        old_name = session.get('name')
-        old_email = session.get('password')
-        if str(form.password.data).isalpha():
-            flash('Please include numbers in your password.')
-        elif str(form.password.data).isdigit():
-            flash('Please include alphabets in your password.')
-        elif str(form.password.data).isalnum():
-            flash('Please include special characters in your password.')
-        else:
-            #Call API to Update the BackEnd
-            session['name'] = form.name.data
-            session['user_authenticated'] = True
-       
-        return redirect(url_for('login'))
+    if request.method == 'POST' and form.validate_on_submit():
+        #Call API to Update the BackEnd
+        session['name'] = form.name.data
+        session['user_authenticated'] = True
+        return redirect(url_for('index'))
 
     return render_template('login.html', form=form, name=session.get('name'), password=session.get('password'))
-    # return render_template('login.html')
 
 
 if __name__ == '__main__':
