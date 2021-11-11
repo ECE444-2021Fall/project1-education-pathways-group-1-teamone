@@ -46,6 +46,8 @@ def handler(event, context):
         copyPath = params['copyPath'] if 'copyPath' in params else []
         results = user_table.add_enrol_path(
             params['Username'], params['pathName'], copyPath)
+    elif action == "SetMainPath":
+        results = user_table.set_main_path(params['Username'], params['pathName'])
     elif action == "GetPath":
         results = user_table.get_enrol_path(params['Username'], params['pathName'])
     elif action == "DeletePath":
@@ -65,19 +67,4 @@ def handler(event, context):
     elif "ResponseMetadata" in results:
         status = results["ResponseMetadata"]["HTTPStatusCode"]
     response = construct_response(status, results)
-    return response 
-
-if __name__ == "__main__":
-    params = {
-        "action": "AddUser",
-        "Username": "testUser4",
-        "Name": "Test",
-        "Email": "test@thisisatest.com",
-        "Password": "testpass",
-        "Type": "STUDENT",
-        "pathName": "path1",
-        "courseCode": "TEST121"
-    }
-    resp = handler({"body": json.dumps(params)}, {})
-    print(json.dumps(json.loads(resp['body']), indent=4))
-    print(resp['statusCode'])
+    return response

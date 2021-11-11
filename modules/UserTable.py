@@ -30,8 +30,8 @@ class UserTable(Table):
         try:
             params.update({
                 "Active": True,
-                "EnrolmentPaths": {},
-                "MainPath": ""
+                "EnrolmentPaths": {'default_profile': []},
+                "MainPath": "default_profile"
             })
             response = self.get_table().put_item(
                 Item=params, ConditionExpression='attribute_not_exists(Username)')
@@ -83,6 +83,14 @@ class UserTable(Table):
     # Adds an enrolment path to the given user, if dupe_from is not empty/None,
     # the path will be a duplicate of dupe_from
     def add_enrol_path(self, username, path_name, dupe_from=[]):
+        if self.get_enrol_path(username, path_name)["HTTPStatusCode"] != HTTPStatus.NOT_FOUND.value:
+            return {
+                "ResponseMetadata": {
+                    "HTTPStatusCode": HTTPStatus.CONFLICT.value
+                },
+                "HTTPStatusCode": HTTPStatus.CONFLICT.value,
+                "Message": f"Path {path_name} already exists"
+            }
         return self.get_table().update_item(
             Key={'Username': username},
             UpdateExpression="SET EnrolmentPaths.#pname = :i",
@@ -141,25 +149,31 @@ class UserTable(Table):
     # }
     # **** Note that the only REQUIRED attribute in the course object is the Code ****
     def add_course_to_path(self, username, path_name, course):
-        status = HTTPStatus.OK.value
+        status = HTTPStatus.CONFLICT.value
         resp = None
+        message = "The course already exists in the path"
         if self.get_enrol_path(username, path_name)["HTTPStatusCode"] == HTTPStatus.NOT_FOUND.value:
             status = HTTPStatus.BAD_REQUEST.value
+            message = "Path not found"
         else:
-            attr = f"EnrolmentPaths.{path_name}"
-            resp = self.get_table().update_item(
-                Key={'Username': username},
-                UpdateExpression=f"SET {attr} = list_append({attr}, :i)",
-                ExpressionAttributeValues={
-                    ':i': [course],
-                },
-                ReturnValues="ALL_NEW"
-            )
+            if self.get_index_of_course(username, path_name, course['Code']) != -1:    
+                status = HTTPStatus.OK.value
+                attr = f"EnrolmentPaths.{path_name}"
+                message = "Success. Added course."
+                resp = self.get_table().update_item(
+                    Key={'Username': username},
+                    UpdateExpression=f"SET {attr} = list_append({attr}, :i)",
+                    ExpressionAttributeValues={
+                        ':i': [course],
+                    },
+                    ReturnValues="ALL_NEW"
+                )
         return resp or {
             "ResponseMetadata": {
                 "HTTPStatusCode": status
             },
-            "HTTPStatusCode": status
+            "HTTPStatusCode": status,
+            "Message": message
         }
     
     # Given a course code and enrolment path, find the index of the course in the path list
@@ -189,3 +203,15 @@ class UserTable(Table):
             },
             "HTTPStatusCode": status
         }
+
+    # Set the users main path/profile to the given path name
+    def set_main_path(self, username, path_name):
+        if self.get_enrol_path(username, path_name)["HTTPStatusCode"] == HTTPStatus.NOT_FOUND.value:
+            return {
+                "ResponseMetadata": {
+                    "HTTPStatusCode": HTTPStatus.NOT_FOUND.value
+                },
+                "HTTPStatusCode": HTTPStatus.NOT_FOUND.value,
+                "Message": f"Path {path_name} does not exist"
+            }
+        return self.update_item(username, 'MainPath', path_name)
