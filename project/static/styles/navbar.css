@@ -1,13 +1,17 @@
 
 
 a.navbar-brand.text-primary:hover{
-   color:lightblue !important;
+   color:blue !important;
 }
 a.navbar-brand.text-primary{
-    padding-left: 50px;
+  color:#3C64B1 !important;
+  font-weight: bold;
+  padding-left: 50px;
 }
-
-
+a.navbar-brand.img-primary{
+  height: 10px;
+  padding-left: 50px;
+}
 
 .mx-auto > li{
   padding-left:40px;
@@ -25,6 +29,10 @@ nav i.fa-fw:hover {
   padding-right:30px;
 }
 
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
 
 
 

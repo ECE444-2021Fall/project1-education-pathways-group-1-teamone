@@ -12,10 +12,15 @@
 }
 
 .custom{
-    width: 180px;
+    width: 100%;
     padding: 10px;
 }
 
 button{
     font-size: large;
+}
+
+.btn-primary{
+    background-color: #3C64B1;
+    border-color: #3C64B1;
 }

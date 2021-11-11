@@ -10,11 +10,12 @@ table {
   border-collapse: collapse;
   width: 97%;
   margin-top: 50px;
+  margin-bottom: 50px;
 }
 h1{
     text-align: center;
     margin-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 td {
@@ -49,5 +50,16 @@ td p{
 
 
 .btn{
-    width: 20%;
+  width: 25%;
+}
+
+.btn-primary{
+    /*background-color: #FF8E00;*/
+    background-color: #3C64B1;
+    border-color: #3C64B1;
+}
+
+.btn-primary:hover{
+    background-color: #3C64B1;
+    border-color: #3C64B1;
 }
