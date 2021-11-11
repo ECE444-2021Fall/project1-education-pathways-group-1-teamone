@@ -2,16 +2,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-   
     <section class="course_info">
-        <h1>Course Information</h1>
+
         {% if course %}
             <table class="table">
+                <thead>
+                    <div class="course_header"><h1>{{code}}: {{course_name|join(', ')}}</h1>
+                            <a type="button" href="/course/{{code}}/enroll"><img src="{{url_for('static', filename='/images/courseinfo_heart.png')}}"/>Add to Enrolment Cart</a>  
+                    </div>
+                </thead>
                 <tbody id="courseInfo">
-                    {% for key in course %}
+                    {% for key, content in course %}
                          <tr><td class="col-2"><h5>{{key}}</h5></td>
-                        {% set content = course[key] %}
                         {% if not content %}
                             <td class="col-2">N/A</td>
                             {% continue %}
@@ -36,36 +38,45 @@
     <section class="discussion">
         <h1>Discussion</h1>
         <form class="row g-3" action="/course/{{code}}/add_comment" method="post">
-            <textarea class="form-control" rows="4" placeholder="What's up?" required></textarea>
-            <span class="col-8"></span>
-            <button type="submit" class="btn btn-primary col-4">Add Comment</button>
+            <textarea class="form-control" name="message" rows="4" placeholder="What's up?" required></textarea>
+            <div class="col-8">
+
+            </div>
+            <div class="col-2">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="anonymous">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Post Anonymously
+                </label>
+             </div>
+            <button type="submit" class="col-2 btn btn-primary">Add Comment</button>
+           
         </form>
 
         <h3>{{comments|length}} comments</h3>
         <table class="table">    
             {% for comment in comments %}
+                {% set postID = comment['PostID'] %}
                 <tr>
-                    <td class="col-1">
+                    <td class="col-1 align-middle text-center">
                         <figure class="figure">
                             <img class="user" src="{{url_for('static', filename='images/discussionboard_user.png')}}"  alt="User">
-                            <figcaption class="figure-caption">{{comment['user']}}</figcaption>
+                            <figcaption class="figure-caption">{{comment['User']}}</figcaption>
                         </figure>
                     </td>
                     <td class="col-7 align-middle">
                         <p class="message">
-                        {{comment['message']}}
+                        {{comment['Message']}}
                         </p>
                     </td>
                     <td class="col-1">
-                        <i class="fa fa-lg fa-heart" onclick="toggleHeartColor(this)"></i>
-                        <span class="like">{{comment['like']}}</span>
+                        <i class="fa fa-lg fa-heart" onclick="toggleHeartColor(this, '{{code}}', '{{postID}}')"></i>
+                        <span class="like">{{comment['NumLikes']}}</span>
                     </td>
-                    <td class="col-1"><i>{{comment['time']}}</i></td>
+                    <td class="col-1"><i>{{comment['DateTime']}}</i></td>
                 </tr>
             {% endfor %}
         </table>
     </section>
-    <script src="{{url_for('static', filename='scripts/course.js')}}"></script>
+    <script type="application/javascript" src="{{url_for('static', filename='scripts/course.js')}}"></script>
     <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/course.css') }}">
-
 {% endblock %}

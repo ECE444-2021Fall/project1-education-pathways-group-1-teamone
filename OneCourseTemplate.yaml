@@ -25,3 +25,28 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 21d977c7-4060-4ae2-98d0-c02509c6370a
+  CoursesTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: Courses
+      AttributeDefinitions:
+        - AttributeName: CourseID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: CourseID
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 21d977c7-4060-4ae2-98d0-c02509c6370a
+  UsersTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: Users
+      AttributeDefinitions:
+        - AttributeName: Username
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Username
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
