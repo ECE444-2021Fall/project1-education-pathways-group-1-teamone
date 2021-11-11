@@ -1,4 +1,6 @@
 from Table import Table
+from datetime import datetime
+import uuid
 
 # This class implements the ability to add and modify discussion boards in 
 # the discussion table in AWS
@@ -15,43 +17,108 @@ class DiscussionTable(Table):
     def add_item(self, courseID):
         discussionTableItem = {
             "CourseID": courseID,
-            "Ratings": {
-                "Homework": 0,
-                "Content": 0,
-                "Exams": 0
-            },
             "DiscussionBoard": []
         }        
-
-        response = self.table.put_item(Item=discussionTableItem)
+        response = self.get_table().put_item(Item=discussionTableItem)
 
         if response['ResponseMetadata']['HTTPStatusCode'] != 200: 
             print("Error creating discussion board for:", courseID)
             print(response)
-    def get_item(self):
-        #TODO
-        pass
 
-    def update_item(self):
-        #TODO
-        pass
+        return response
 
-    def delete_item(self):
-        #TODO
-        pass
+    def get_item(self, courseID):
+            response = self.get_table().get_item(Key={'CourseID': courseID})
+            return response['Item']
 
-    def add_post(self):
-        #TODO
-        pass
+    # Updates an existing course item in the database. Param is the parameter to
+    # be updated and value is the value to update it to.
+    def update_item(self, courseID, param, value):
+        response = self.get_table().update_item(
+        Key={
+            'CourseID': courseID,
+        },
+        UpdateExpression=f"set {param}=:p",
+        ExpressionAttributeValues={
+            ':p': value,
+        })
+        return response
 
-    def remove_post(self):
-        #TODO
-        pass
+    # Deletes a course discussion from the database
+    def delete_item(self, courseID):
+        response = self.get_table().delete_item(Key={'CourseID': courseID})
+        return response
 
-    def upvote_post(self):
-        #TODO
-        pass
+    def add_post(self, courseID, userName, time, message):
+        postID = str(uuid.uuid4())
+        newPost = {"PostID": postID, "User": userName, "DateTime": time, "Message": message, "NumLikes": 0}
 
-    def downvote_post(self):
-        #TODO
-        pass
+        self.get_table().update_item(
+            Key={'CourseID': courseID},
+            UpdateExpression="SET DiscussionBoard = list_append(DiscussionBoard, :i)",
+            ExpressionAttributeValues={
+                ':i': [newPost],
+            },
+            ReturnValues="ALL_NEW"
+        )
+        return newPost
+
+    # Helper function to return the index of a post in DiscussionBoard list
+    def get_index_of_post(self, courseID, postID):
+        discussionBoard = self.get_item(courseID)["DiscussionBoard"]
+        for idx, post in enumerate(discussionBoard):
+            if post["PostID"] == postID:
+                return idx
+        return -1
+
+    # Deletes a post from the DiscussionBoard list of a course
+    def delete_post(self, courseID, postID):
+        indexOfPost = self.get_index_of_post(courseID, postID)
+        if indexOfPost == -1:
+            return "400"
+
+        response = self.get_table().update_item(
+            Key={'CourseID': courseID},
+            UpdateExpression=f"REMOVE DiscussionBoard[{indexOfPost}]",
+            ReturnValues="UPDATED_NEW"
+        )
+        return response["ResponseMetadata"]["HTTPStatusCode"]
+
+    # Increments the likes of a post in the DiscussionBoard list 
+    def upvote_post(self, courseID, postID):
+        indexOfPost = self.get_index_of_post(courseID, postID)
+        if indexOfPost == -1:
+            return "400"
+        
+        post = self.get_item(courseID)["DiscussionBoard"][indexOfPost]
+        post["NumLikes"] += 1
+
+        self.delete_post(courseID, postID)
+        response = self.get_table().update_item(
+            Key={'CourseID': courseID},
+            UpdateExpression="SET DiscussionBoard = list_append(DiscussionBoard, :i)",
+            ExpressionAttributeValues={
+                ':i': [post],
+            },
+            ReturnValues="ALL_NEW"
+        )
+        return str(post["NumLikes"])
+
+    # Decrements the likes of a post in the DiscussionBoard list 
+    def downvote_post(self, courseID, postID):
+        indexOfPost = self.get_index_of_post(courseID, postID)
+        if indexOfPost == -1:
+            return "400"
+        
+        post = self.get_item(courseID)["DiscussionBoard"][indexOfPost]
+        post["NumLikes"] -= 1
+        self.delete_post(courseID, postID)
+        response = self.get_table().update_item(
+            Key={'CourseID': courseID},
+            UpdateExpression="SET DiscussionBoard = list_append(DiscussionBoard, :i)",
+            ExpressionAttributeValues={
+                ':i': [post],
+            },
+            ReturnValues="ALL_NEW"
+        )
+        return str(post["NumLikes"])
