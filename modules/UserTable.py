@@ -129,7 +129,10 @@ class UserTable(Table):
         else:
             response = self.get_table().update_item(
                 Key={'Username': username},
-                UpdateExpression=f"REMOVE EnrolmentPaths.{path_name}",
+                UpdateExpression="REMOVE EnrolmentPaths.#pname",
+                ExpressionAttributeNames={
+                    '#pname': path_name
+                },
                 ReturnValues="UPDATED_NEW"
             )
             status = response["ResponseMetadata"]["HTTPStatusCode"]
@@ -156,15 +159,17 @@ class UserTable(Table):
             status = HTTPStatus.BAD_REQUEST.value
             message = "Path not found"
         else:
-            if self.get_index_of_course(username, path_name, course['Code']) != -1:    
+            if self.get_index_of_course(username, path_name, course['Code']) == -1:    
                 status = HTTPStatus.OK.value
-                attr = f"EnrolmentPaths.{path_name}"
                 message = "Success. Added course."
                 resp = self.get_table().update_item(
                     Key={'Username': username},
-                    UpdateExpression=f"SET {attr} = list_append({attr}, :i)",
+                    UpdateExpression="SET EnrolmentPaths.#pname = list_append(EnrolmentPaths.#pname, :i)",
+                    ExpressionAttributeNames={
+                        '#pname': path_name
+                    },
                     ExpressionAttributeValues={
-                        ':i': [course],
+                        ':i': [course]
                     },
                     ReturnValues="ALL_NEW"
                 )
@@ -191,10 +196,13 @@ class UserTable(Table):
         if self.get_enrol_path(username, path_name)["HTTPStatusCode"] != HTTPStatus.NOT_FOUND.value:
             index = self.get_index_of_course(username, path_name, course_code)
             if index != -1:
-                attr = f"EnrolmentPaths.{path_name}[{index}]"
+                attr = f"EnrolmentPaths.#pname[{index}]"
                 resp = self.get_table().update_item(
                     Key={'Username': username},
                     UpdateExpression=f"REMOVE {attr}",
+                    ExpressionAttributeNames={
+                        '#pname': path_name
+                    },
                     ReturnValues="UPDATED_NEW"
                 )
         return resp or {
