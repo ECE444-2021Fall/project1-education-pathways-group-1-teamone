@@ -12,14 +12,13 @@
 	</div>    
 	{% endfor %}    
 	{% block page_content %}
-    Please provide the following information.
     {{ wtf.quick_form(form, id="registerUser") }}
     <div class="submit_button">
-        <button type="submit" form="registerUser" class="btn btn-primary">Register</button>
-        <a href="{{url_for('login')}}" class="btn btn-primary pull-right">Log In</a> 
+        <button type="submit" form="registerUser" class="btn btn-primary custom">Register</button>
     </div>
-
+	Already have an account? <a href="{{url_for('login')}}">Log in</a>
 	{% endblock %}
+	<img src="/static/images/CARTE_logo.jpg" alt="CARTE logo" style="padding-top: 50px;">
 </div>
 
 {% endblock %}

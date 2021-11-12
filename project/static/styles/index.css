@@ -14,7 +14,7 @@ table {
 }
 h1{
     text-align: center;
-    margin-top: 20px;
+    margin-top: 130px;
     margin-bottom: 40px;
 }
 
@@ -49,19 +49,18 @@ td p{
 }
 
 
-.btn{
-  width: 25%;
+
+.custom{
+    width: 25%;
+    padding: 10px;
+}
+
+button{
+    font-size: large;  
 }
 
 .btn-primary{
-    /*background-color: #FF8E00;*/
     background-color: #3C64B1;
     border-color: #3C64B1;
-    margin: auto 50px;
+    margin-bottom: 10px;
 }
-
-.btn-primary:hover{
-    background-color: #3C64B1;
-    border-color: #3C64B1;
-}
-
