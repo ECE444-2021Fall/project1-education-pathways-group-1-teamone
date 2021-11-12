@@ -130,7 +130,7 @@ def course(code):
     if not session.get('user_authenticated'):
         return render_template('course.html', course=course, code=code)
     
-    username = session.get('name')
+    username = session.get('username')
     paths = get_paths(username)
     #---------Get course comments----------
     params = {
@@ -163,7 +163,7 @@ def add_comment(code, username):
 def enroll():
     if not session.get('user_authenticated'):
         return render_template('enroll.html', username=None)
-    return render_template('enroll.html', paths=get_paths(session['name']), username=session['name'])
+    return render_template('enroll.html', paths=get_paths(session['username']), username=session['username'])
 
 def get_paths(username):    
     params = {
@@ -240,7 +240,7 @@ def upgrade_vote():
 @app.route('/user', methods=['GET', 'POST'])
 def user():
     if session.get('user_authenticated') == True:
-        return render_template('user.html', name=session['username'])
+        return render_template('user.html', username=session['username'])
     else:
         form = LogInForm()
         flash('Please login to access User Tab.')
@@ -288,7 +288,8 @@ def register():
             }
             res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
             if res.status_code!=200:
-                flash("Please provide valid information")
+                flash("Username " + str(form.username.data) + " is alread being used")
+                return render_template('register.html', form=form)
             flash('Thanks for registering. Please sign In.')
             return redirect(url_for('login'))
     return render_template('register.html', form=form)
@@ -300,6 +301,8 @@ def encodePassword(password):
 @app.route('/login', methods=['GET', 'POST'])
 def login(des = None):
     if (session.get('user_authenticated')):
+        if des:
+                return redirect(url_for(des))
         return redirect(url_for('index'))
     password = None
     form = LogInForm()
@@ -335,4 +338,5 @@ def login(des = None):
 
 
 if __name__ == '__main__':
+    session['user_authenticated'] = False
     app.run(debug=True)

@@ -12,10 +12,10 @@
 	</div>    
 	{% endfor %}    
 	{% block page_content %}
+    Please <a href="{{url_for('register')}}">register</a> if you do not have an account.
     {{ wtf.quick_form(form, id="loginUser") }}
     <div class="submit_button">
-        <button type="submit" form="loginUser" class="btn btn-primary">Log In</button>
-    	<a href="{{url_for('register')}}" class="btn btn-primary pull-right">Register</a>
+        <button type="submit" form="loginUser" class="btn btn-primary pull-right">Log In</button>
 	</div>
 
 	{% endblock %}

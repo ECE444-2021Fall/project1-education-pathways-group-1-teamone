@@ -4,7 +4,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand text-primary" href="/"><img class="navbar-brand img-primary" src="/static/images/logo.png" alt="OneCourse" height="50px"></a>
+        {% if session['user_authenticated']  %}
         <a href="{{url_for('logout')}}" class="btn btn-primary btn-lg">LogOut</a>
+        {% endif %}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
