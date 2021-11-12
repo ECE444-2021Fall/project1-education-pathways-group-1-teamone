@@ -15,6 +15,9 @@ from flask_wtf import Form
 from wtforms import validators
 from wtforms.fields.html5 import EmailField
 from markupsafe import Markup
+import hashlib
+
+
 
 
 #selections 
@@ -127,7 +130,7 @@ def course(code):
     if not session.get('user_authenticated'):
         return render_template('course.html', course=course, code=code)
     
-    username = session.get('name')
+    username = session.get('username')
     paths = get_paths(username)
     #---------Get course comments----------
     params = {
@@ -160,7 +163,7 @@ def add_comment(code, username):
 def enroll():
     if not session.get('user_authenticated'):
         return render_template('enroll.html', username=None)
-    return render_template('enroll.html', paths=get_paths(session['name']), username=session['name'])
+    return render_template('enroll.html', paths=get_paths(session['username']), username=session['username'])
 
 def get_paths(username):    
     params = {
@@ -197,6 +200,16 @@ def remove_course():
     res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
     return res.text
 
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    if session.get('username'):   
+        session.pop('username')
+    if session.get('user_authenticated'):   
+        session.pop('user_authenticated')
+    if session.get('user_info'):   
+        session.pop('user_info')
+    return redirect(url_for("index"))
+
 @app.route('/enroll/add_path/<username>', methods=['POST'])
 def add_path(username):   
     params = {
@@ -227,15 +240,15 @@ def upgrade_vote():
 @app.route('/user', methods=['GET', 'POST'])
 def user():
     if session.get('user_authenticated') == True:
-        return render_template('user.html', name=session['name'])
+        return render_template('user.html', username=session['username'])
     else:
         form = LogInForm()
         flash('Please login to access User Tab.')
-        return redirect(url_for('login'))
+        return redirect(url_for('login', des='user'))
 
 #Log In Code
 class LogInForm(Form):
-    name = StringField('Username', validators=[DataRequired('Please provide a valid username.')])    
+    username = StringField('Username', validators=[DataRequired('Please provide a valid username.')])    
     password = PasswordField('Password', [validators.DataRequired('Please provide a valid password.')])
     remember_me = BooleanField('Remember Me')
     # submit = SubmitField('Submit')
@@ -245,7 +258,7 @@ class RegisterForm(Form):
     username = StringField('Username', validators=[DataRequired('Please provide a valid username.')])
     name = StringField('Full Name', validators=[DataRequired('Please provide a valid name.')])    
     email = EmailField('Email', [validators.DataRequired(), validators.Email()])
-    userType = SelectField(u'User Type', choices=[('student', 'Student'), ('professor', 'Professor'), ('admin', 'Course Admin'), ('developer', 'Application Developer')])
+    userType = SelectField(u'User Type', choices=[('STUDENT', 'Student'), ('PROFESSOR', 'Professor'), ('ADMIN', 'Course Admin')])
     password = PasswordField('Password', [validators.DataRequired('Please provide a strong password.')])
     # password = PasswordField('Password', [InputRequired(), EqualTo(fieldname='passwordConfirm', message='Passwords must match')])
     passwordConfirm = PasswordField('Repeat Password')
@@ -266,22 +279,64 @@ def register():
         elif str(form.password.data).isalnum():
             flash('Please include special characters in your password.')
         else:
+            params = {
+                "action": "AddUser",
+                "Username": str(form.username.data),
+                "Email": str(form.email.data),
+                "Password": encodePassword(form.password.data),
+                "Type": str(form.userType.data)
+            }
+            res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
+            if res.status_code!=200:
+                flash("Username " + str(form.username.data) + " is alread being used")
+                return render_template('register.html', form=form)
             flash('Thanks for registering. Please sign In.')
             return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
+def encodePassword(password):
+    encoded = password.encode()
+    return hashlib.sha256(encoded).hexdigest()
+
 @app.route('/login', methods=['GET', 'POST'])
-def login():
-    name = None
+def login(des = None):
+    if (session.get('user_authenticated')):
+        if des:
+                return redirect(url_for(des))
+        return redirect(url_for('index'))
     password = None
     form = LogInForm()
     if request.method == 'POST' and form.validate_on_submit():
-        #Call API to Update the BackEnd
-        session['name'] = form.name.data
-        session['user_authenticated'] = True
-        return redirect(url_for('index'))
-    return render_template('login.html', form=form, name=session.get('name'), password=session.get('password'))
+        #---------Get User Authenticated----------        
+        params = {
+            "action": "Login",
+            "Username": str(form.username.data),
+            "Password": encodePassword(str(form.password.data))
+        }
+        res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
+        if res.status_code!=200:
+            flash("Incorrect username and/or password")
+        else:
+            #---------Get User Information----------   
+            params = {
+                "action": "GetUser",
+                "Username": str(form.username.data),
+            }
+            res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
+            if res.status_code!=200:
+                flash("Please refer to your email to activate your account")
+            user_info = json.loads(res.text) 
+            session['username'] = form.username.data
+            session['user_authenticated'] = True
+            session['user_info'] = user_info
+            if des:
+                return redirect(url_for(des))
+            else:
+                return redirect(url_for('index'))
+            
+    return render_template('login.html', form=form)
 
 
 if __name__ == '__main__':
+    session['user_authenticated'] = False
     app.run(debug=True)

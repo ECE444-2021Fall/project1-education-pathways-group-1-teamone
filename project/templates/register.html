@@ -12,9 +12,16 @@
 	</div>    
 	{% endfor %}    
 	{% block page_content %}
+<<<<<<< HEAD
+    Please provide the following information. <a href="/login">Login</a> if you have already registered.
+    {{ wtf.quick_form(form, id="registerUser") }}
+    <div class="submit_button">
+        <button type="submit" form="registerUser" class="btn btn-primary pull-right">Register</button>
+=======
     {{ wtf.quick_form(form, id="registerUser") }}
     <div class="submit_button">
         <button type="submit" form="registerUser" class="btn btn-primary custom">Register</button>
+>>>>>>> 07badd372da629bf2f47cc06f05a49d49a664707
     </div>
 	Already have an account? <a href="{{url_for('login')}}">Log in</a>
 	{% endblock %}
