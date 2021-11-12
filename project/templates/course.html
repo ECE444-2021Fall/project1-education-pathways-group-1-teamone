@@ -2,14 +2,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <script type="application/javascript" src="{{url_for('static', filename='scripts/enroll.js')}}"></script>
+    
     <section class="course_info">
 
         {% if course %}
             <table class="table">
                 <thead>
                     <div class="course_header"><h1>{{code}}: {{course['Name'][0]}}</h1>
-                        <button type="button" onclick="popup('bg-model-enroll_course')"><img src="{{url_for('static', filename='/images/courseinfo_heart.png')}}"/>Add to Enrolment Cart</button>  
+                        {% if username %}
+                            <button type="button" onclick="popup('bg-model-enroll_course')">
+                                <img src="{{url_for('static', filename='/images/courseinfo_heart.png')}}"/>Add to Enrolment Cart
+                            </button>  
+                        {% endif %}
                     </div>
                 </thead>
                 <tbody id="courseInfo">
@@ -36,78 +40,81 @@
         {% endif %}
     </section>
 
-    <section class="discussion">
-        <h1>Discussion</h1>
-        <form class="row g-3" action="/course/{{code}}/add_comment" method="post">
-            <textarea class="form-control" name="message" rows="4" placeholder="What's up?" required></textarea>
-            <div class="col-8">
+    {% if username %}
+        <section class="discussion">
+            <h1>Discussion</h1>
+            <form class="row g-3" action="/course/{{code}}/add_comment/{{username}}" method="post">
+                <textarea class="form-control" name="message" rows="4" placeholder="What's up?" required></textarea>
+                <div class="col-8">
 
-            </div>
-            <div class="col-2">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="anonymous">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Post Anonymously
-                </label>
-             </div>
-            <button type="submit" class="col-2 btn btn-primary">Add Comment</button>
-           
-        </form>
-
-        <h3>{{comments|length}} comments</h3>
-        <table class="table">    
-            {% for comment in comments %}
-                {% set postID = comment['PostID'] %}
-                <tr>
-                    <td class="col-1 align-middle text-center">
-                        <figure class="figure">
-                            <img class="user" src="{{url_for('static', filename='images/discussionboard_user.png')}}"  alt="User">
-                            <figcaption class="figure-caption">{{comment['User']}}</figcaption>
-                        </figure>
-                    </td>
-                    <td class="col-7 align-middle">
-                        <p class="message">
-                        {{comment['Message']}}
-                        </p>
-                    </td>
-                    <td class="col-1">
-                        <i class="fa fa-lg fa-heart" onclick="toggleHeartColor(this, '{{code}}', '{{postID}}')"></i>
-                        <span class="like">{{comment['NumLikes']}}</span>
-                    </td>
-                    <td class="col-1"><i>{{comment['DateTime']}}</i></td>
-                </tr>
-            {% endfor %}
-        </table>
-    </section>
-
-    <div class="bg-model" id='bg-model-enroll_course'>
-        <div class="model-contents">
-            <div class="close" onclick="off(this)">+</div>
-            <form class="enroll_course" method="POST" action="/enroll/add_course/{{course['Name'][0]}}/{{code}}">
-                <select class="form-select" name="term_choice" >
-                    {% for term in course['Term']%}
-                        {% if loop.index == 1%}
-                            <option value="{{term}}" selected style="padding: 24px;">{{term}}</option>
-                        {% else%}
-                            <option value="{{term}}" style="padding: 24px;">{{term}}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-
-
-                <select class="form-select" name="path_choice" id="paths">
-                    {% for path in paths%}
-                        {% if loop.index == 1%}
-                            {% set first_path = path%}
-                            <option value="{{path}}" selected style="padding: 24px;">{{path}}</option>
-                        {% else%}
-                            <option value="{{path}}" style="padding: 24px;">{{path}}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <button class="btn btn-primary" type="submit" name="add_new" value="add_new">Enroll</button>
+                </div>
+                <div class="col-2">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="anonymous">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Post Anonymously
+                    </label>
+                </div>
+                <button type="submit" class="col-2 btn btn-primary">Add Comment</button>
+            
             </form>
+
+            <h3>{{comments|length}} comments</h3>
+            <table class="table">    
+                {% for comment in comments %}
+                    {% set postID = comment['PostID'] %}
+                    <tr>
+                        <td class="col-1 align-middle text-center">
+                            <figure class="figure">
+                                <img class="user" src="{{url_for('static', filename='images/discussionboard_user.png')}}"  alt="User">
+                                <figcaption class="figure-caption">{{comment['User']}}</figcaption>
+                            </figure>
+                        </td>
+                        <td class="col-7 align-middle">
+                            <p class="message">
+                            {{comment['Message']}}
+                            </p>
+                        </td>
+                        <td class="col-1">
+                            <i class="fa fa-lg fa-heart" onclick="toggleHeartColor(this, '{{code}}', '{{postID}}')"></i>
+                            <span class="like">{{comment['NumLikes']}}</span>
+                        </td>
+                        <td class="col-1"><i>{{comment['DateTime']}}</i></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </section>
+        <div class="bg-model" id='bg-model-enroll_course'>
+            <div class="model-contents">
+                <div class="close" onclick="off(this)">+</div>
+                <form class="enroll_course" method="POST" action="/enroll/add_course/{{course['Name'][0]}}/{{code}}/{{username}}">
+                    <select class="form-select" name="term_choice" >
+                        {% for term in course['Term']%}
+                            {% if loop.index == 1%}
+                                <option value="{{term}}" selected style="padding: 24px;">{{term}}</option>
+                            {% else%}
+                                <option value="{{term}}" style="padding: 24px;">{{term}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+
+                    <select class="form-select" name="path_choice" id="paths">
+                        {% for path in paths%}
+                            {% if loop.index == 1%}
+                                {% set first_path = path%}
+                                <option value="{{path}}" selected style="padding: 24px;">{{path}}</option>
+                            {% else%}
+                                <option value="{{path}}" style="padding: 24px;">{{path}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-primary" type="submit" name="add_new" value="add_new">Enroll</button>
+                </form>
+            </div>
         </div>
-    </div>
+        <script type="application/javascript" src="{{url_for('static', filename='scripts/enroll.js')}}"></script>
+    {% else %}
+        <h3> Please <a href="/login">login</a> first to join course discussion or enroll the course!</h3>
+    {% endif %}
 
     <script type="application/javascript" src="{{url_for('static', filename='scripts/course.js')}}"></script>
     <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/course.css') }}">

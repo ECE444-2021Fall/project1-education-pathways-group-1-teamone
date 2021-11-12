@@ -57,9 +57,11 @@ td p{
     /*background-color: #FF8E00;*/
     background-color: #3C64B1;
     border-color: #3C64B1;
+    margin: auto 50px;
 }
 
 .btn-primary:hover{
     background-color: #3C64B1;
     border-color: #3C64B1;
 }
+
