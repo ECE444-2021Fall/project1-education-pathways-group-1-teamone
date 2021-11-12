@@ -24,11 +24,13 @@ button{
     margin-bottom: 10px;
 }
 
-
-
 .submit_button {
     margin-top: 10px;
     align-content: center;
 }
 
 .has_errors { border: 1px solid #ff0000 }
+
+.form-control {
+    margin-bottom: 10px;
+}

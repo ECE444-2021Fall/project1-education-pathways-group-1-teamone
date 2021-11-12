@@ -2,7 +2,9 @@ section{
     margin: 40px auto;
 }
 section.course_info h1 {
+
     padding: 10px;
+    padding-top: 20px;
     padding-bottom: 10px;
     padding-right: 100px;
 }
