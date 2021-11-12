@@ -63,7 +63,7 @@ api_urls = {
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', username=session.get('username'))
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
