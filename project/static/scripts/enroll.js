@@ -45,5 +45,3 @@ async function drop_course(e){
 }
 
 
-render_path()
-
