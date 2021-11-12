@@ -5,72 +5,72 @@
     <body>
     <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/enroll.css') }}">
 
-    <h1>Enrollment Cart</h1>
-    <h3>Current Path</h3>
-    <div class="row">
-        
-        <div class="col-8">
-            <select class="form-select form-select-lg" id="path_selection" onchange="render_path()">
-                {% for path in paths%}
-                    {% if loop.index == 1%}
-                        {% set first_path = path%}
-                        <option value="1" selected style="padding: 24px;">{{path}}</option>
-                    {% else%}
-                        <option value="1" style="padding: 24px;">{{path}}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-        </div>
-        <div class="operations col-4">
-            <button class="btn btn-primary custom" onclick="popup('bg-model-add_path')"> Add Path </button>
-            <button class="btn btn-secondary custom" onclick="popup('bg-model-delete_path')"> Delete Path </button>
-        </div>
-    </div>
-
-    <h3>Courses in Path</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th class="align-middle col-2">Code</th>
-                <th class="align-middle col-5">Name</th>
-                <th class="align-middle col-3">Semester</th>
-                <th class="align-middle text-center col-2">Drop Course</th>
-            </tr>
-        </thead>
-        <tbody id="path_courses">
-        </tbody>
-    </table>
-
-    <div class="bg-model" id="bg-model-add_path">
-        <div class="model-contents align-middle">
-            <div class="close" onclick="off(this)">+</div>
-            <form method="post" action="/enroll/add_path">
-                <input id="pathName" type="text" name="path" placeholder="Path name" required>
-                <button class="btn btn-primary" name="AddPath" value="AddPath">Submit</button>
-            </form>
-        </div>
-    </div>
-
-
-    <div class="bg-model" id="bg-model-delete_path">
-
-        <div class="model-contents">
-            <div class="close" onclick="off(this)">+</div>
-            <form method="post" action="/enroll/delete_path">
-
-                <select class="form-select" name="path_choice" id="path_choice">
+    {% if not username%}
+        <h3>Please <a href="/login">login</a> first to view your enrollment cart!</h3>
+    {% else %}
+        <h1>Enrollment Cart</h1>
+        <h3>Current Path</h3>
+        <div class="row">
+            
+            <div class="col-7">
+                <select class="form-select form-select-lg" id="path_selection" onchange="render_path()">
                     {% for path in paths%}
                         {% if loop.index == 1%}
-                            <option value="{{path}}" selected style="padding: 24px;">{{path}}</option>
+                            {% set first_path = path%}
+                            <option value="1" selected style="padding: 24px;">{{path}}</option>
                         {% else%}
-                            <option value="{{path}}"style="padding: 24px;">{{path}}</option>
+                            <option value="1" style="padding: 24px;">{{path}}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
-                <button class="btn btn-primary">Submit</button>
-            </form>
+            </div>
+            <div class="operations col-5">
+                <button onclick="popup('bg-model-add_path')"> Add Path </button>      
+                <button onclick="popup('bg-model-delete_path')"> Delete Path </button>
+            </div>
         </div>
-    </div>
-    <script type="text/javascript">var paths_json = {{paths|tojson}}</script>
-    <script type="application/javascript" src="{{url_for('static', filename='scripts/enroll.js')}}"></script>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="align-middle col-2">Code</th>
+                    <th class="align-middle col-5">Name</th>
+                    <th class="align-middle col-3">Semester</th>
+                    <th class="align-middle text-center col-2">Drop Course</th>
+                </tr>
+            </thead>
+            <tbody id="path_courses">
+            </tbody>
+        </table>
+
+        <div class="bg-model" id="bg-model-add_path">
+            <div class="model-contents align-middle">
+                <div class="close" onclick="off(this)">+</div>
+                <form method="post" action="/enroll/add_path/{{username}}">
+                    <input id="pathName" type="text" name="path" placeholder="Path name" required>
+                    <button class="btn btn-primary" name="AddPath" value="AddPath">Add</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="bg-model" id="bg-model-delete_path">
+            <div class="model-contents">
+                <div class="close" onclick="off(this)">+</div>
+                <form method="post" action="/enroll/delete_path/{{username}}">
+                    <select class="form-select" name="path_choice">
+                        {% for path in paths%}
+                            {% if loop.index == 1%}
+                                <option value="{{path}}" selected style="padding: 24px;">{{path}}</option>
+                            {% else%}
+                                <option value="{{path}}"style="padding: 24px;">{{path}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-primary">Delete</button>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript">const paths_json = {{paths|tojson}}; const username = {{username}}</script>
+        <script type="application/javascript" src="{{url_for('static', filename='scripts/enroll.js')}}"></script>
+    {% endif %}
 {% endblock %}

@@ -58,7 +58,6 @@ api_urls = {
     "userTable":"https://kxa7awvtc4.execute-api.us-east-1.amazonaws.com/default/userTable"
 }
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -110,71 +109,74 @@ def course(code):
             return dic[x[0]]
         else:
             return (float('inf'))
-    course = None 
-    comments = None
-    if code in df.index:
-        #---------Get course information----------        
-        params = {
-            "from": 0,
-            "numResults": 20,
-            "queryString": code, 
-            "filters": {
-            }
-        }
-        res = requests.get(url=api_urls["courseSearch"], headers=headers, data=json.dumps(params))
-        course = json.loads(res.text)[code]["data"]  
-        del course["CourseID"]
-        del course["Level"]
-        course = dict(sorted(course.items(), key=sorter))
-        
-        #---------Get course comments----------
-        params = {
-                "action": "GetComments",
-                "courseID": code
-        }
-        r = requests.get(url=api_urls["discussionTable"], headers=headers, data=json.dumps(params))
-        comments = sorted(json.loads(r.text), key=lambda x:int(x['NumLikes']), reverse=True)
-        
-        #---------Get paths----------
-        paths = get_paths()
-    return render_template('course.html', course=course, comments=comments, code=code, paths=paths)
 
-@app.route('/course/<code>/add_comment', methods=['POST'])
-def add_comment(code):
+
+    #---------Get course information----------        
+    params = {
+        "from": 0,
+        "numResults": 20,
+        "queryString": code, 
+        "filters": {
+        }
+    }
+    res = requests.get(url=api_urls["courseSearch"], headers=headers, data=json.dumps(params))
+    course = json.loads(res.text)[code]["data"]  
+    del course["CourseID"]
+    del course["Level"]
+    course = dict(sorted(course.items(), key=sorter))
+    if not session.get('user_authenticated'):
+        return render_template('course.html', course=course, code=code)
+    
+    username = session.get('name')
+    paths = get_paths(username)
+    #---------Get course comments----------
+    params = {
+            "action": "GetComments",
+            "courseID": code
+    }
+    r = requests.get(url=api_urls["discussionTable"], headers=headers, data=json.dumps(params))
+    comments = sorted(json.loads(r.text), key=lambda x:int(x['NumLikes']), reverse=True)
+    
+    #---------Get paths----------
+    paths = get_paths(username)
+    return render_template('course.html', course=course, comments=comments, code=code, paths=paths, username=username)
+
+@app.route('/course/<code>/add_comment/<username>', methods=['POST'])
+def add_comment(code, username):
     form = request.form    
     params = {
         "action": "AddComment",
         "courseID": code,
-        "User": "",
-        "DateTime": datetime.datetime.now().strftime("%m/%d/%Y %H:%M"),
+        "User": username,
+        "DateTime": datetime.now().strftime("%m/%d/%Y %H:%M"),
         "Message": form.get("message")
     }
     if form.get('anonymous') is not None:
         params['User'] = 'Anonymous'
-    else:
-        params['User'] = 'Anyone'
     res = requests.get(url=api_urls["discussionTable"], headers=headers, data=json.dumps(params))
     return redirect(url_for("course", code=code))
 
 @app.route('/enroll', methods=['GET', 'POST'])
 def enroll():
-    return render_template('enroll.html', paths=get_paths())
+    if not session.get('user_authenticated'):
+        return render_template('enroll.html', username=None)
+    return render_template('enroll.html', paths=get_paths(session['name']), username=session['name'])
 
-def get_paths():    
+def get_paths(username):    
     params = {
         "action": "GetUser",
-        "Username": "Tony"
+        "Username": username
     }
     res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
     paths = res.json()['EnrolmentPaths']
     return paths
 
-@app.route('/enroll/add_course/<course_name>/<code>', methods=['POST'])
-def add_course(course_name, code):  
+@app.route('/enroll/add_course/<course_name>/<code>/<username>', methods=['POST'])
+def add_course(course_name, code, username):  
     form = request.form    
     params = {
         "action": "AddCourse",
-        "Username": "Tony",
+        "Username": username,
         "pathName": form.get("path_choice"),
         "course":{
             "Code":code,
@@ -184,6 +186,9 @@ def add_course(course_name, code):
         }
     }
     res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
+    if res.status_code!=200:
+        flash(res.text)
+        return res.text
     return redirect(url_for("enroll"))
 
 @app.route('/enroll/remove_course', methods=['POST'])
@@ -192,21 +197,21 @@ def remove_course():
     res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
     return res.text
 
-@app.route('/enroll/add_path', methods=['POST'])
-def add_path():   
+@app.route('/enroll/add_path/<username>', methods=['POST'])
+def add_path(username):   
     params = {
         "action": "AddPath",
-        "Username": "Tony",
+        "Username": username,
         "pathName": request.form.get("path"),
     }
     res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
     return redirect(url_for("enroll"))
 
-@app.route('/enroll/delete_path', methods=['POST'])
-def delete_path():  
+@app.route('/enroll/delete_path/<username>', methods=['POST'])
+def delete_path(username):  
     params = {
         "action": "DeletePath",
-        "Username": "Tony",
+        "Username": username,
         "pathName": request.form.get("path_choice"),
     }
     res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
@@ -219,15 +224,14 @@ def upgrade_vote():
     return res.text
     
 
-
-@app.route('/user/<name>', methods=['GET', 'POST'])
-def user(name):
+@app.route('/user', methods=['GET', 'POST'])
+def user():
     if session.get('user_authenticated') == True:
         return render_template('user.html', name=session['name'])
     else:
         form = LogInForm()
         flash('Please login to access User Tab.')
-        return render_template('login.html', form=form)
+        return redirect(url_for('login'))
 
 #Log In Code
 class LogInForm(Form):
@@ -268,7 +272,6 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     name = None
     password = None
     form = LogInForm()
