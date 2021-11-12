@@ -1,16 +1,17 @@
-div.operations button{
-    border: 3px solid #2196F3;
-    background-color: transparent;
-    border-radius: 7px;
-    padding: 4px 30px;
-    margin-left: 100px;
+
+.custom{
+    width: 40%;
+    padding: 11px;
+}
+
+button{
     font-size: large;
 }
 
-div.operations button:hover {
-  background: #2196F3;
-  color: white;
-  
+.btn-primary{
+    background-color: #3C64B1;
+    border-color: #3C64B1;
+	/* margin-left: 75px; */
 }
 
 h3{
@@ -18,8 +19,10 @@ h3{
 }
 
 select {
+	width: 100%;
     padding:10px;
 }
+
 option {
     -webkit-appearance:none;
     -moz-appearance:none;
@@ -28,7 +31,7 @@ option {
 
 table{
     border: 2px solid black;
-    margin-top: 100px;
+    margin-top: 10px;
     width: 100%;
 }
 

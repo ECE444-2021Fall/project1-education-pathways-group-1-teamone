@@ -11,23 +11,24 @@
 
 #results-page-table-container table td{
     padding: 8px;
-    border-left: 1px solid #00204E;
-    border-bottom: 1px solid #00204E;
+    border-left: 2px solid #888888;
+    border-bottom: 2px solid #888888;
 }
 
 #results-page-table-container table th{
     padding: 8px;
     text-align: center;
     top: 2px;
-    background-color: #00204E;
-    color: white;
-    border-left: 1px solid #00204E;
-    border-bottom: 1px solid #00204E;
+    /* background-color: blue; */
+    /* color: white; */
+    border-top: 2px solid #888888;
+    border-left: 2px solid #888888;
+    border-bottom: 2px solid #888888;
 }
 
 #results-page-table-container table th:last-child, 
 #results-page-table-container table td:last-child{
-    border-right: 1px solid #00204E;
+    border-right: 2px solid #888888;
 }
 
 .description{

@@ -2,7 +2,11 @@ section{
     margin: 40px auto;
 }
 section.course_info h1 {
-    padding: 20px;
+
+    padding: 10px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    padding-right: 100px;
 }
 
 
@@ -68,7 +72,8 @@ div.course_header {
 div.course_header h1 {
   margin: 0;
 }
-div.course_header button {
+
+/* div.course_header button {
   position: absolute;
   right:0;
   border: 3px solid black;
@@ -85,7 +90,8 @@ div.course_header button {
 div.course_header button:hover {
   background: #2196F3;
   color: white;
-}
+} */
+
 div.course_header button img{
     width:25px;
     height:25px;
@@ -137,3 +143,19 @@ form select {
 	transform: rotate(45deg);
 	cursor: pointer;
 }
+.custom{
+    width: 20%;
+    padding: 8px;
+}
+
+button{
+    font-size: large;
+}
+
+.btn-primary{
+    background-color: #3C64B1;
+    border-color: #3C64B1;
+    /* margin-left: 100px; */
+    /* margin-bottom: 10px; */
+}
+

@@ -5,14 +5,14 @@
 {% block content %}
     <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/results.css') }}">
    <section class="course_search">
-       <h1 style="margin-top:120px; margin-bottom:20px">Course Search</h1>
+       <h1 style="margin-top:120px; margin-bottom:25px">Course Search</h1>
         {% with form=form, selections=selections %}{% include 'form.html' %}{% endwith%}
    </section>
    {% if not search_results%}
         <h2>No matches found!</h2>
    {% else %}
         <section class="search_result">
-                <h1 style="margin-bottom: 25px;">Search Results</h1>
+                <h1 style="margin-bottom: 20px;">Search Results</h1>
                 <div id="results-page-table-container">
                     
                     <table class="row">

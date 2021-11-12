@@ -5,7 +5,7 @@
 
   <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/index.css') }}">
   <h1>
-    Welcome to <span style="color:#3C64B1;">OneCourse</span>,<br>
+    Welcome to <span style="color:#3C64B1;">ONECOURSE</span>,<br>
     CARTE's tool for course selections at UofT.
   </h1>
   <p class="description">
@@ -43,10 +43,9 @@
       </tbody>
   </table>
   <div class="text-center">
-    <a href="{{url_for('search')}}" class="btn btn-primary btn-lg">Find Course</a>
-    <!--<a><img src="/static/images/CARTE_logo.jpg" class="pull-right" style="max-width: 25%"></a>-->
-    <a href="{{url_for('login')}}" class="btn btn-primary btn-lg">Log In</a>
-    <a href="{{url_for('register')}}" class="btn btn-primary btn-lg">Register</a>
+    <a href="{{url_for('search')}}" class="btn btn-primary custom btn-lg">Search Courses</a><br>
+
+    Not signed in? <a href="{{url_for('login')}}"Log In>Log In</a> or <a href="{{url_for('register')}}" >Register</a>
   </div>
   
 {% endblock %}
