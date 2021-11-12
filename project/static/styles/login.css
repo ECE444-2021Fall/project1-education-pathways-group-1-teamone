@@ -1,8 +1,30 @@
 h1,h2,h3{
     margin-top: 100px;
     margin-bottom: 15px;
-    color:#2196F3 !important;
+    text-align: center;
+    /* color:#2196F3 !important; */
  }
+
+.custom{
+    width: 20%;
+    padding: 8px;
+}
+
+.container{
+    width: 60%;
+}
+
+button{
+    font-size: large;
+}
+
+.btn-primary{
+    background-color: #3C64B1;
+    border-color: #3C64B1;
+    margin-bottom: 10px;
+}
+
+
 
 .submit_button {
     margin-top: 10px;
