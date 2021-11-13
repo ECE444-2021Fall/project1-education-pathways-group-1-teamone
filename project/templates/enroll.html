@@ -4,7 +4,11 @@
 {% block content %}
     <body>
     <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/enroll.css') }}">
-
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>    
+	{% endfor %}
     {% if not username%}
         <h3>Please <a href="/login">login</a> first to view your enrollment cart!</h3>
     {% else %}
@@ -15,11 +19,10 @@
             <div class="col-7">
                 <select class="form-select form-select-lg" id="path_selection" onchange="render_path()">
                     {% for path in paths%}
-                        {% if loop.index == 1%}
-                            {% set first_path = path%}
-                            <option value="1" selected style="padding: 24px;">{{path}}</option>
+                        {% if (loop.index == 1 and not pathName) or (path == pathName)%}
+                            <option value="{{path}}" selected style="padding: 24px;">{{path}}</option>
                         {% else%}
-                            <option value="1" style="padding: 24px;">{{path}}</option>
+                            <option value="{{path}}" style="padding: 24px;">{{path}}</option>
                         {% endif %}
                     {% endfor %}
                 </select>

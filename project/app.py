@@ -67,10 +67,8 @@ def index():
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    
     if request.method == 'POST':
         return results()
-    
     return render_template('search.html', form=request.form, selections=selections)
 
 def results():
@@ -92,7 +90,6 @@ def results():
                 if len(ls) > 0:
                     params["filters"][k] = ls
     res = requests.get(url=api_urls["courseSearch"], headers=headers, data=json.dumps(params))
-
     search_results = json.loads(res.text)
     return render_template('results.html', form=form, selections=selections, search_results=search_results)
 
@@ -159,11 +156,13 @@ def add_comment(code, username):
     res = requests.get(url=api_urls["discussionTable"], headers=headers, data=json.dumps(params))
     return redirect(url_for("course", code=code))
 
-@app.route('/enroll', methods=['GET', 'POST'])
-def enroll():
+@app.route('/enroll/')
+@app.route('/enroll/<pathName>')
+def enroll(pathName=None):
     if not session.get('user_authenticated'):
         return render_template('enroll.html', username=None)
-    return render_template('enroll.html', paths=get_paths(session['username']), username=session['username'])
+    username = session['username']
+    return render_template('enroll.html', paths=get_paths(username), username=username, pathName=pathName)
 
 def get_paths(username):    
     params = {
@@ -177,10 +176,11 @@ def get_paths(username):
 @app.route('/enroll/add_course/<course_name>/<code>/<username>', methods=['POST'])
 def add_course(course_name, code, username):  
     form = request.form    
+    pathName = form.get("path_choice")
     params = {
         "action": "AddCourse",
         "Username": username,
-        "pathName": form.get("path_choice"),
+        "pathName": pathName,
         "course":{
             "Code":code,
             "Name":course_name,
@@ -190,9 +190,10 @@ def add_course(course_name, code, username):
     }
     res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
     if res.status_code!=200:
-        flash(res.text)
-        return res.text
-    return redirect(url_for("enroll"))
+        flash(res.json()['Message'])
+    else:
+        flash(f'Successfully enroll "{code}" into "{pathName}"!')
+    return redirect(url_for("enroll", pathName=pathName))
 
 @app.route('/enroll/remove_course', methods=['POST'])
 def remove_course():      
@@ -211,14 +212,15 @@ def logout():
     return redirect(url_for("index"))
 
 @app.route('/enroll/add_path/<username>', methods=['POST'])
-def add_path(username):   
+def add_path(username):
+    pathName = request.form.get("path")
     params = {
         "action": "AddPath",
         "Username": username,
-        "pathName": request.form.get("path"),
+        "pathName": pathName,
     }
     res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
-    return redirect(url_for("enroll"))
+    return redirect(url_for("enroll", pathName=pathName))
 
 @app.route('/enroll/delete_path/<username>', methods=['POST'])
 def delete_path(username):  
