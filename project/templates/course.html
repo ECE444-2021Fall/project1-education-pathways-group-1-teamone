@@ -8,13 +8,13 @@
         {% if course %}
             <table class="table">
                 <thead>
-                    {% if username %}
-                            <button class="btn btn-primary custom" type="button" onclick="popup('bg-model-enroll_course')">
-                                Add to Enrollment Cart
-                            </button>
-                        {% endif %}
-                    <div class="course_header"><h1>{{code}}: {{course['Name'][0]}}</h1>
+                    <div class="course_header"><h1>{{code}}: {{course['Name'][0]}}</h1><br>
                     </div>
+                    {% if username %}
+                    <button style="float: right;" class="btn btn-primary custom" type="button" onclick="popup('bg-model-enroll_course')">
+                        Add to Enrollment Cart
+                    </button>
+                {% endif %}
                 </thead>
                 <tbody id="courseInfo">
                     {% for key, content in course.items() %}

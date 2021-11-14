@@ -1,10 +1,15 @@
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/user.css') }}">
+
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
 
 {% block content %}
     <h1>
         {% if username %}
-            Hello {{username}}, this is your user page!
+            Hello {{username}}, this is your user page!<br>
+            {% if session['user_authenticated']  %}
+            <a href="{{url_for('logout')}}" class="btn btn-primary btn-lg">LogOut</a>
+            {% endif %}
         {% else %}
             Hello stranger, please login!
         {% endif %}

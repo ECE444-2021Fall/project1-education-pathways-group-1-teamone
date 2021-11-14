@@ -16,7 +16,7 @@
         <h3>Current Path</h3>
         <div class="row">
             
-            <div class="col-7">
+            <div class="col-8">
                 <select class="form-select form-select-lg" id="path_selection" onchange="render_path()">
                     {% for path in paths%}
                         {% if (loop.index == 1 and not pathName) or (path == pathName)%}
@@ -27,9 +27,9 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="operations col-5">
-                <button class="btn btn-primary" onclick="popup('bg-model-add_path')"> Add Path </button>      
-                <button class="btn btn-primary" onclick="popup('bg-model-delete_path')"> Delete Path </button>
+            <div class="operations col-4">
+                <button class="btn btn-primary custom" onclick="popup('bg-model-add_path')"> Add Path </button>      
+                <button class="btn btn-primary custom" onclick="popup('bg-model-delete_path')"> Delete Path </button>
             </div>
         </div>
 
