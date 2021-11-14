@@ -338,5 +338,4 @@ def login(des = None):
 
 
 if __name__ == '__main__':
-    session['user_authenticated'] = False
     app.run(debug=True)
