@@ -55,13 +55,17 @@ span.like{
     font-weight:normal;
 }
 
-i.fa-heart{
+/* i.fa-heart{
     margin-right: 5px;
 }
 
 i.fa-heart:hover {
     transform: scale(1.5);
     
+} */
+
+img.vote:hover{
+    transform: scale(1.2);
 }
 
 div.course_header {

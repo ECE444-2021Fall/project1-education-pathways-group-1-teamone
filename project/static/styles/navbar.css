@@ -24,7 +24,8 @@ ul.mx-auto li:hover {
     opacity: 0.5;
 }
 
-nav i.fa-fw:hover {
+
+nav li a img:hover {
     transform: scale(1.5);
 }
 

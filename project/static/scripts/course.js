@@ -1,3 +1,5 @@
+var voteCount = 0;
+
 function toggleText(x){
     if(x.innerHTML == "Read More"){
         let tagDes = document.getElementsByClassName("many-text")[0];
@@ -15,35 +17,43 @@ function toggleText(x){
 
 }
 
-function toggleHeartColor(tag_heart, code, postID){
-    var action = "UpvoteComment"
-    var tag_count = tag_heart.nextElementSibling;
-    if(tag_heart.style.color == 'red'){
-        tag_heart.style.color = 'black';
-        action = "DownvoteComment";
-        tag_count.innerHTML = String(Number(tag_count.innerHTML)-1);
+async function upgradeVote(tagVote, code, postID){
+    let action = tagVote.alt;
+    if(action == 'UpvoteComment' && voteCount >= 1){
+        alert("You can't upvote for this comment again!")
+        return
     }
-    else{
-        tag_heart.style.color = 'red';
-        action = "UpvoteComment";
-         tag_count.innerHTML = String(Number(tag_count.innerHTML)+1);
+    if(action == 'DownvoteComment' && voteCount <= -1){
+        alert("You can't downvote for this comment again!")
+        return
     }
-    fetch('http://localhost:5000/upgrade_vote', {
-        method: 'POST',
-        body: JSON.stringify({
-            "action": action,
-            "courseID": code,
-            "PostID": postID
-        }), 
-        headers: {
-            'Content-Type': 'application/json',
-            // "Access-Control-Allow-Methods": "GET",
-            // "Access-Control-Allow-Headers": "Content-Type"
-        },
+
+    await fetch('http://localhost:5000/upgrade_vote', {
+    method: 'POST',
+    body: JSON.stringify({
+        "action": action,
+        "courseID": code,
+        "PostID": postID
+    }), 
+    headers: {
+        'Content-Type': 'application/json',
+    },
     }).then(response => response.json())
     .catch(error => console.log(error));
+    if(action == 'UpvoteComment'){
+        let tagCount = tagVote.nextElementSibling;
+        voteCount += 1;
+        tagCount.innerHTML = String(Number(tagCount.innerHTML)+1);
+    }
+    else{
+        let tagCount = tagVote.previousElementSibling;
+        voteCount -= 1;
+        tagCount.innerHTML = String(Number(tagCount.innerHTML)-1);
+    }
 
 }
+
+
 
 function countLines(ele) {
   var styles = window.getComputedStyle(ele, null);
