@@ -53,6 +53,7 @@ td p.message{
 span.like{
     font-size: large;
     font-weight:normal;
+    display: block;
 }
 
 /* i.fa-heart{
