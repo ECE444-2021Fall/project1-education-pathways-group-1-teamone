@@ -20,11 +20,11 @@ function toggleText(x){
 async function upgradeVote(tagVote, code, postID){
     let action = tagVote.alt;
     if(action == 'UpvoteComment' && voteCount >= 1){
-        alert("You can't upvote for this comment again!")
+        alert("You can't upvote a comment more than once!")
         return
     }
     if(action == 'DownvoteComment' && voteCount <= -1){
-        alert("You can't downvote for this comment again!")
+        alert("You can't downvote a comment more than once!")
         return
     }
 
