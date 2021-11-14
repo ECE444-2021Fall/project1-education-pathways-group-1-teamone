@@ -1,0 +1,9 @@
+button{
+    font-size: large;
+}
+
+.btn-primary{
+    background-color: #3C64B1!important;
+    border-color: #3C64B1!important;
+    margin: 20px;
+}

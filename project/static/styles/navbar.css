@@ -36,5 +36,7 @@ img {
   max-height: 100%;
 }
 
-
+i.fa { 
+  font-family:FontAwesome!important; 
+}
 

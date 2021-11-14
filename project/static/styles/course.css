@@ -155,7 +155,9 @@ button{
 .btn-primary{
     background-color: #3C64B1;
     border-color: #3C64B1;
-    /* margin-left: 100px; */
-    /* margin-bottom: 10px; */
+    margin-bottom: 30px;
 }
 
+i.fa { 
+    font-family:FontAwesome!important; 
+  }
