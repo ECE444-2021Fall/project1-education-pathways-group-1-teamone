@@ -46,9 +46,27 @@
 
   <span class="col-8"></span>
   <div class="col-2">
-    <input type="reset" class="btn btn-secondary custom">
+    <button type="reset" id="btnClear" class="btn btn-secondary custom">Clear Filter</button>
   </div>
   <div class="col-2">
     <button type="submit" class="btn btn-primary custom">Search</button>
   </div>
 </form>
+
+
+<script>
+    function test(){
+       
+        var sels = document.getElementsByClassName("selectpicker");
+        for(let sel of sels){
+            for(let i=0;i<sel.length;i++){
+                if(sel.options[i].selected){  
+                    sel.options[i].removeAttribute("selected");
+                }
+            }
+        }
+        $(`.selectpicker`).val('default').selectpicker("refresh");
+    }
+    document.getElementById("btnClear").addEventListener("click", test);
+
+</script>
