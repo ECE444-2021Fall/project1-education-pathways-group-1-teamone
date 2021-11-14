@@ -26,17 +26,20 @@
             <ul class="navbar-nav mx-right">
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="/">
-                        <i class="fa fa-fw fa-bell"></i>
+                        <!-- <i class="fa fa-fw fa-bell"></i> -->
+                        <img src="{{url_for('static', filename='images/navbar_bell.png')}}"  alt="bell" width=30%>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="/">
-                        <i class="fa fa-fw fa-cog"></i>
+                        <!-- <i class="fa fa-fw fa-cog"></i> -->
+                        <img src="{{url_for('static', filename='images/navbar_gear.png')}}"  alt="gear" width=30%>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="/user">
-                        <i class="fa fa-fw fa-user"></i>
+                        <!-- <i class="fa fa-fw fa-user"></i> -->
+                        <img src="{{url_for('static', filename='images/navbar_user.png')}}"  alt="user" width=30%>
                     </a>
                 </li>
             </ul>

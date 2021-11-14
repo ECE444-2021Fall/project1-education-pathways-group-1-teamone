@@ -27,9 +27,6 @@ ul.mx-auto li:hover {
 nav i.fa-fw:hover {
     transform: scale(1.5);
 }
-.mx-right > li{
-  padding-right:30px;
-}
 
 img {
   max-width: 100%;
