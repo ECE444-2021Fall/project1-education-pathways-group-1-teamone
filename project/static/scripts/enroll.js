@@ -13,8 +13,9 @@ function render_path(){
     var tbody = document.getElementById("path_courses");
     tbody.innerHTML = "";
     for(let course of paths_json[path]){
+        let courseRef = `/course/${course["Code"]}`
         let row = `<tr id="">
-                        <td class="align-middle col-2">${course["Code"]}</td>
+                        <td class="align-middle col-2"><a href=${courseRef}>${course["Code"]}</a></td>
                         <td class="align-middle col-5">${course["Name"]}</td>
                         <td class="align-middle col-3">${course["Semester"]}</td>
                         <td class="align-middle text-center col-2"><button class="btn btn-secondary" onclick="drop_course(this)">drop</button></td>
