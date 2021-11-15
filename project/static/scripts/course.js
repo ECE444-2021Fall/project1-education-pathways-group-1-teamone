@@ -1,4 +1,4 @@
-var voteCount = 0;
+var voteCount = {};
 
 function toggleText(x){
     if(x.innerHTML == "Read More"){
@@ -19,14 +19,17 @@ function toggleText(x){
 
 async function upgradeVote(tagVote, code, postID){
     let action = tagVote.alt;
-    if(action == 'UpvoteComment' && voteCount >= 1){
-        alert("You can't upvote a comment more than once!")
-        return
+    if(voteCount[postID]){
+        if(action == 'UpvoteComment' && voteCount[postID] >= 1){
+            alert("You can't upvote this comment more than once!")
+            return
+        }
+        else if(action == 'DownvoteComment' && voteCount[postID] <= -1){
+            alert("You can't downvote this comment more than once!")
+            return
+        }
     }
-    if(action == 'DownvoteComment' && voteCount <= -1){
-        alert("You can't downvote a comment more than once!")
-        return
-    }
+
 
     await fetch('/upgrade_vote', {
     method: 'POST',
@@ -42,12 +45,12 @@ async function upgradeVote(tagVote, code, postID){
     .catch(error => console.log(error));
     if(action == 'UpvoteComment'){
         let tagCount = tagVote.nextElementSibling;
-        voteCount += 1;
+        voteCount[postID] = (voteCount[postID] + 1) || 1;
         tagCount.innerHTML = String(Number(tagCount.innerHTML)+1);
     }
     else{
         let tagCount = tagVote.previousElementSibling;
-        voteCount -= 1;
+        voteCount[postID] = (voteCount[postID] - 1) || -1;
         tagCount.innerHTML = String(Number(tagCount.innerHTML)-1);
     }
 
