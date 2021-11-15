@@ -1,6 +1,4 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='styles/navbar.css') }}">
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css">
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand text-primary" href="/"><img class="navbar-brand img-primary" src="/static/images/logo-test.png" alt="OneCourse" height="40px"></a>
@@ -23,19 +21,16 @@
             <ul class="navbar-nav mx-right">
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="/">
-                        <!-- <i class="fa fa-fw fa-bell"></i> -->
                         <img src="{{url_for('static', filename='images/navbar_bell.png')}}"  alt="bell" width=30%>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="/">
-                        <!-- <i class="fa fa-fw fa-cog"></i> -->
                         <img src="{{url_for('static', filename='images/navbar_gear.png')}}"  alt="gear" width=30%>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="/user">
-                        <!-- <i class="fa fa-fw fa-user"></i> -->
                         <img src="{{url_for('static', filename='images/navbar_user.png')}}"  alt="user" width=30%>
                     </a>
                 </li>
