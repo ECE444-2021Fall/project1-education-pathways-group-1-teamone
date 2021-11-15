@@ -56,15 +56,6 @@ span.like{
     display: block;
 }
 
-/* i.fa-heart{
-    margin-right: 5px;
-}
-
-i.fa-heart:hover {
-    transform: scale(1.5);
-    
-} */
-
 img.vote:hover{
     transform: scale(1.2);
 }
@@ -162,7 +153,3 @@ button{
     border-color: #3C64B1;
     margin-bottom: 30px;
 }
-
-i.fa { 
-    font-family:FontAwesome!important; 
-  }
