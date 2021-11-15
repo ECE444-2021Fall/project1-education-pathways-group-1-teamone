@@ -28,7 +28,7 @@ async function drop_course(e){
     var courseCode = e.parentNode.parentNode.childNodes[1].innerText;
     var ePathChoice = document.getElementById("path_selection");
     var pathName = ePathChoice.options[ePathChoice.selectedIndex].text;   
-    await fetch('http://localhost:5000/enroll/remove_course', {
+    await fetch('http://onecourse.herokuapp.com/enroll/remove_course', {
         method: 'POST',
         body: JSON.stringify({
             "action": "RemoveCourse",
