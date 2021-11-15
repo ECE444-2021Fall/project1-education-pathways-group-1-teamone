@@ -28,7 +28,7 @@ async function upgradeVote(tagVote, code, postID){
         return
     }
 
-    await fetch('http://onecourse.herokuapp.com/upgrade_vote', {
+    await fetch('/upgrade_vote', {
     method: 'POST',
     body: JSON.stringify({
         "action": action,
