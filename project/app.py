@@ -1,5 +1,5 @@
 from os import pardir
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, Response
 from flask_bootstrap import Bootstrap
 from flask_cors import CORS
 from flask_wtf import FlaskForm
@@ -199,7 +199,7 @@ def add_course(course_name, code, username):
 def remove_course():      
     params = request.get_json()
     res = requests.get(url=api_urls["userTable"], headers=headers, data=json.dumps(params))
-    return res.text
+    return Response(res.text, status=res.status_code, mimetype='application/json')
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
@@ -236,7 +236,7 @@ def delete_path(username):
 def upgrade_vote():
     params = request.get_json()
     res = requests.get(url=api_urls["discussionTable"], headers=headers, data=json.dumps(params))
-    return res.text
+    return Response(res.text, status=res.status_code, mimetype='application/json')
     
 
 @app.route('/user', methods=['GET', 'POST'])
@@ -253,7 +253,6 @@ class LogInForm(Form):
     username = StringField('Username', validators=[DataRequired('Please provide a valid username.')])    
     password = PasswordField('Password', [validators.DataRequired('Please provide a valid password.')])
     remember_me = BooleanField('Remember Me')
-    # submit = SubmitField('Submit')
 
 #Register Code
 class RegisterForm(Form):

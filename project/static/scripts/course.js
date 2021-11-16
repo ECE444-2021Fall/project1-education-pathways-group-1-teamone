@@ -29,31 +29,35 @@ async function upgradeVote(tagVote, code, postID){
             return
         }
     }
-
-
     await fetch('/upgrade_vote', {
-    method: 'POST',
-    body: JSON.stringify({
-        "action": action,
-        "courseID": code,
-        "PostID": postID
-    }), 
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    }).then(response => response.json())
-    .catch(error => console.log(error));
+        method: 'POST',
+        body: JSON.stringify({
+            "action": action,
+            "courseID": code,
+            "PostID": postID
+        }), 
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response =>{ 
+        if(!response.ok){
+            alert("Update Comment Failed");
+            throw response.statusText;
+        }
+        return response.json(); 
+    })
+    
     if(action == 'UpvoteComment'){
         let tagCount = tagVote.nextElementSibling;
-        voteCount[postID] = (voteCount[postID] + 1) || 1;
+        voteCount[postID] = (voteCount[postID] || 0) + 1;
         tagCount.innerHTML = String(Number(tagCount.innerHTML)+1);
     }
     else{
         let tagCount = tagVote.previousElementSibling;
-        voteCount[postID] = (voteCount[postID] - 1) || -1;
+        voteCount[postID] = (voteCount[postID] || 0) - 1;
         tagCount.innerHTML = String(Number(tagCount.innerHTML)-1);
     }
-
 }
 
 
