@@ -39,9 +39,14 @@ async function drop_course(e){
         headers: {
             'Content-Type': 'application/json',
         },
-    }
-    ).then(response => response.json())
-    .catch(error => console.log(error));
+    })
+    .then(response => {
+        if(!response.ok){
+            alert("Drop Course Failed!");
+            throw response.statusText;
+        }
+        return response.json();
+    })
     e.parentNode.parentNode.remove();
 }
 
